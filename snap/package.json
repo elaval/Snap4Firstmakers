@@ -1,0 +1,19 @@
+{
+  "main": "makers.html",
+  "name": "FirstMakers",
+  "description": "FirstMakers",
+  "window": {
+    "title": "FirstMakers",
+    "icon": "FirstMakers.ico",
+    "toolbar": false,
+    "frame": true,
+    "position": "mouse",
+    "width": 960,
+    "height": 640,
+    "min_width": 960,
+    "min_height": 640
+  },
+  "dependencies": {
+    "firmata": "~0.3.3"
+  }
+}
