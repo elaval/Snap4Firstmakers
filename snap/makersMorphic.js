@@ -25,7 +25,11 @@ WorldMorph.prototype.makers.convertAnalogMeasure = {
 
     // Potentiometer - gives (0 to 5 volts)
     'potentiometer' : function(val) {
-        var percentage = 100.0*val/1023.0;
+        var maxVal = 1023*20000.0/20100;
+        var percentage = 100.0*(maxVal-val)/maxVal;
+
+        percentage = percentage < 0 ? 0 : percentage;
+        percentage = percentage > 100 ? 100 : percentage;
 
         // return rouded to 1 decimal
         return Math.round(10*percentage)/10;
@@ -47,7 +51,22 @@ WorldMorph.prototype.makers.convertAnalogMeasure = {
 
         // return rouded to 1 decimal
         return Math.round(10*percentage)/10;
-    }
+    },
+
+    // Linear relation volts to percentage
+    'humidity' : function(val) {
+        var percentage = 100.0*val/1023.0;
+
+        // return rouded to 1 decimal
+        return Math.round(10*percentage)/10;
+    },
+
+    // Normal statr is val > 900
+    // When signal is detected, goes below 100
+    'infrared' : function(val) {
+
+        return val < 100;
+    },
 
 
 

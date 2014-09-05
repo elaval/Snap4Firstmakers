@@ -42,11 +42,23 @@ makersTempDict = {
 
     // makers:
     
-    'led on':
-        'prender led',
+    'turn on led %ledcolor':
+        'prender led %ledcolor',
 
-    'led off':
-        'apagar led',
+    'turn off led %ledcolor':
+        'apagar led %ledcolor',
+
+    'white (w)' : 
+        'blanco (w)',
+
+    'red (r)' : 
+        'rojo (r)',
+
+    'yellow (y)' : 
+        'amarillo (y)',
+
+    'green (g)' : 
+        'verde (g)',
 
     'buzzer at %buzzerval':
         'bocina en %buzzerval',
@@ -54,14 +66,20 @@ makersTempDict = {
     'temperature':
         'temperatura',
 
-    'ligth':
+    'light':
         'luz',
 
     'sound':
         'sonido',
 
+    'humidity':
+        'humedad',
+
+    'infrared':
+        'infrarojo',
+
     'potentiometer':
-        'potenciometro',
+        'potenciómetro',
 
     'switch':
         'botón',

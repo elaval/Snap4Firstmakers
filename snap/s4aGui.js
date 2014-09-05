@@ -133,30 +133,25 @@ function homePath() {
 /**
  * Override setLanguage function
  */
-IDE_Morph.prototype.setLanguage = function (lang, callback) {
-    var translation = document.getElementById('language'),
-        src = 'lang-' + lang + '.js',
-        myself = this;
-    SnapTranslator.unload();
-    if (translation) {
-        document.head.removeChild(translation);
-    }
-    if (lang === 'en') {
-        return this.reflectLanguage('en', callback);
-    }
-    translation = document.createElement('script');
-    translation.id = 'language';
-    translation.onload = function () {
-        myself.reflectLanguage(lang, callback);
-    };
-    document.head.appendChild(translation);
-    translation.src = src;
+/**
+ * Override setLanguage function for s4a 
+ */
+IDE_Morph.prototype.setLanguageSnap = IDE_Morph.prototype.setLanguage;
 
+IDE_Morph.prototype.setLanguage = function(lang, callback) {
+    var myself = this;
+
+    myself.setLanguageSnap(lang, function() {
+        myself.setLanguageS4A(lang, callback);
+    });
+};
+
+IDE_Morph.prototype.setLanguageS4A = function (lang, callback) {
     // Load language script for s4a related functions
     var s4a_translation = document.getElementById('s4a-language'),
         s4a_src = 's4a-lang-' + lang + '.js',
         myself = this;
-    SnapTranslator.unload();
+    //SnapTranslator.unload();
     if (s4a_translation) {
         document.head.removeChild(s4a_translation);
     }
@@ -172,4 +167,5 @@ IDE_Morph.prototype.setLanguage = function (lang, callback) {
     s4a_translation.src = s4a_src;
 
 };
+
 

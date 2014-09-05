@@ -140,20 +140,6 @@ function overridenBlockTemplates(category) {
         spec: 'disconnect arduino'
     };
 
-    SpriteMorph.prototype.blocks.makersArduinoState =
-    {
-        type: 'reporter',
-        category: 'makers',
-        spec: 'arduino state'
-    };
-
-
-    SpriteMorph.prototype.blocks.makersIsConnectedArduino =
-    {
-        type: 'predicate',
-        category: 'makers',
-        spec: 'arduino is connected'
-    };
 
     SpriteMorph.prototype.blocks.makersBuzzer =
     {
@@ -166,36 +152,35 @@ function overridenBlockTemplates(category) {
     {
         type: 'command',
         category: 'makers',
-        spec: 'led on'
+        spec: 'turn on led %ledcolor'
     };
-
 
     SpriteMorph.prototype.blocks.makersLedOff =
     {
         type: 'command',
         category: 'makers',
-        spec: 'led off'
+        spec: 'turn off led %ledcolor'
     };
 
-    SpriteMorph.prototype.blocks.makersPotentiometer =
+    SpriteMorph.prototype.blocks.makersBuzzerOn =
     {
-        type: 'reporter',
+        type: 'command',
         category: 'makers',
-        spec: 'potentiometer'
+        spec: 'buzzer on'
     };
- 
+
+    SpriteMorph.prototype.blocks.makersBuzzerOff =
+    {
+        type: 'command',
+        category: 'makers',
+        spec: 'buzzer off'
+    };
+
     SpriteMorph.prototype.blocks.makersTemperature =
     {
         type: 'reporter',
         category: 'makers',
         spec: 'temperature'
-    };
-
-    SpriteMorph.prototype.blocks.makersAudio =
-    {
-        type: 'reporter',
-        category: 'makers',
-        spec: 'audio'
     };
 
     SpriteMorph.prototype.blocks.makersLight =
@@ -205,7 +190,34 @@ function overridenBlockTemplates(category) {
         spec: 'light'
     };
 
+    SpriteMorph.prototype.blocks.makersAudio =
+    {
+        type: 'reporter',
+        category: 'makers',
+        spec: 'audio'
+    };
 
+    SpriteMorph.prototype.blocks.makersHumidity =
+    {
+        type: 'reporter',
+        category: 'makers',
+        spec: 'humidity'
+    };
+
+    SpriteMorph.prototype.blocks.makersInfrared =
+    {
+        type: 'predicate',
+        category: 'makers',
+        spec: 'infrared'
+    };
+
+    SpriteMorph.prototype.blocks.makersPotentiometer =
+    {
+        type: 'reporter',
+        category: 'makers',
+        spec: 'potentiometer'
+    };
+ 
  
     SpriteMorph.prototype.blocks.makersSwitch =
     {
@@ -213,6 +225,35 @@ function overridenBlockTemplates(category) {
         category: 'makers',
         spec: 'switch'
     };
+    
+    SpriteMorph.prototype.blocks.makersTurnOnActuator =
+    {
+        type: 'command',
+        category: 'makers',
+        spec: 'turn on pin %actuatorPin'
+    };
+    
+    SpriteMorph.prototype.blocks.makersTurnOffActuator =
+    {
+        type: 'command',
+        category: 'makers',
+        spec: 'turn off pin %actuatorPin'
+    };
+
+    SpriteMorph.prototype.blocks.makersSetPWM =
+    {
+        type: 'command',
+        category: 'makers',
+        spec: 'set pwn %pwmPin to %pwmValue'
+    };
+    
+    SpriteMorph.prototype.blocks.makersReadSensor =
+    {
+        type: 'reporter',
+        category: 'makers',
+        spec: 'read sensor %sensorPin'
+    };
+    
     
     // Redirects user to a web page (on local brower) for getting a PIN number from Twitter
     SpriteMorph.prototype.blocks.makersGetTwitterPin =
@@ -252,7 +293,7 @@ function overridenBlockTemplates(category) {
         var board = sprite.arduino.board;
         if (sprite.makersIsBoardConnected()) {
             var val;
-            var pin = 3;
+            var pin = 0;
 
             if (board.pins[board.analogPins[pin]].mode != board.MODES.ANALOG) {
                 board.pinMode(board.analogPins[pin],board.MODES.ANALOG);
@@ -271,7 +312,7 @@ function overridenBlockTemplates(category) {
         if (sprite.makersIsBoardConnected()) {
 
             var val;
-            var pin = 2;
+            var pin = 1;
 
             if (board.pins[board.analogPins[pin]].mode != board.MODES.ANALOG) {
                 board.pinMode(board.analogPins[pin],board.MODES.ANALOG);
@@ -291,13 +332,53 @@ function overridenBlockTemplates(category) {
         if (sprite.makersIsBoardConnected()) {
 
             var val;
-            var pin = 0;
+            var pin = 2;
 
             if (board.pins[board.analogPins[pin]].mode != board.MODES.ANALOG) {
                 board.pinMode(board.analogPins[pin],board.MODES.ANALOG);
             }
             val =  board.pins[board.analogPins[pin]].value;
             return world.makers.convertAnalogMeasure.audio(val);
+        } else {
+            return null;
+        }
+
+    };
+
+    SpriteMorph.prototype.makersHumidity = function () {
+        var sprite = this;
+
+        var board = sprite.arduino.board;
+        if (sprite.makersIsBoardConnected()) {
+
+            var val;
+            var pin = 3;
+
+            if (board.pins[board.analogPins[pin]].mode != board.MODES.ANALOG) {
+                board.pinMode(board.analogPins[pin],board.MODES.ANALOG);
+            }
+            val =  board.pins[board.analogPins[pin]].value;
+            return world.makers.convertAnalogMeasure.humidity(val);
+        } else {
+            return null;
+        }
+
+    };
+
+    SpriteMorph.prototype.makersInfrared = function () {
+        var sprite = this;
+
+        var board = sprite.arduino.board;
+        if (sprite.makersIsBoardConnected()) {
+
+            var val;
+            var pin = 4;
+
+            if (board.pins[board.analogPins[pin]].mode != board.MODES.ANALOG) {
+                board.pinMode(board.analogPins[pin],board.MODES.ANALOG);
+            }
+            val =  board.pins[board.analogPins[pin]].value;
+            return world.makers.convertAnalogMeasure.infrared(val);
         } else {
             return null;
         }
@@ -311,7 +392,7 @@ function overridenBlockTemplates(category) {
         if (sprite.makersIsBoardConnected()) {
 
             var val;
-            var pin = 1;
+            var pin = 5;
 
             if (board.pins[board.analogPins[pin]].mode != board.MODES.ANALOG) {
                 board.pinMode(board.analogPins[pin],board.MODES.ANALOG);
@@ -324,9 +405,30 @@ function overridenBlockTemplates(category) {
 
     };
 
+    SpriteMorph.prototype.makersSwitch = function () {
+        var sprite = this;
+
+        var board = sprite.arduino.board;
+        if (sprite.makersIsBoardConnected()) {
+
+            var val;
+            var digitalPin = 2;
+
+            val =  board.pins[digitalPin].value;
+            return val === 1;
+        } else {
+            return null;
+        }
+
+    };
+   
+
     if (category === 'makers') {
         blocks.push(blockBySelector('makersLedOn'));
         blocks.push(blockBySelector('makersLedOff'));
+        blocks.push('-');
+        blocks.push(blockBySelector('makersBuzzerOn'));
+        blocks.push(blockBySelector('makersBuzzerOff'));
         blocks.push(blockBySelector('makersBuzzer'));
         blocks.push('-');
         blocks.push(watcherToggle('makersTemperature'));
@@ -335,10 +437,21 @@ function overridenBlockTemplates(category) {
         blocks.push(blockBySelector('makersLight'));
         blocks.push(watcherToggle('makersAudio'));
         blocks.push(blockBySelector('makersAudio'));
+        blocks.push(watcherToggle('makersHumidity'));
+        blocks.push(blockBySelector('makersHumidity'));
+        blocks.push(watcherToggle('makersInfrared'));
+        blocks.push(blockBySelector('makersInfrared'));
         blocks.push(watcherToggle('makersPotentiometer'));
         blocks.push(blockBySelector('makersPotentiometer'));
         blocks.push('-');
+        blocks.push(watcherToggle('makersSwitch'));
         blocks.push(blockBySelector('makersSwitch'));
+        blocks.push('-');
+        blocks.push(blockBySelector('makersTurnOnActuator'));
+        blocks.push(blockBySelector('makersTurnOffActuator'));
+        blocks.push(blockBySelector('makersSetPWM'));
+        blocks.push('-');
+        blocks.push(blockBySelector('makersReadSensor'));
         blocks.push('-');
         blocks.push(tweetButton);
         blocks.push(blockBySelector('makersSendTweet'));
