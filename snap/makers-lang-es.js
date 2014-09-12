@@ -49,7 +49,10 @@ makersTempDict = {
         'apagar led %ledcolor',
 
     'white (w)' : 
-        'blanco (w)',
+        'blanco (w)',    
+
+    'w' : 
+        'b',
 
     'red (r)' : 
         'rojo (r)',
@@ -62,6 +65,12 @@ makersTempDict = {
 
     'buzzer at %buzzerval':
         'bocina en %buzzerval',
+
+    'buzzer on':
+        'prender bocina',
+
+    'buzzer off':
+        'apagar bocina',
 
     'temperature':
         'temperatura',

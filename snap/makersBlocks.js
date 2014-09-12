@@ -91,6 +91,21 @@ function overridenLabelPart(spec) {
             part.setContents('A0');
             break;
 
+        case '%digitalPin':
+            part = new InputSlotMorph(
+                null,
+                true,
+                {
+                    '3':'3',
+                    '8':'8',
+                    '9':'9',
+                    '10':'10',
+                    '11':'11',
+                    '12':'12'
+                }
+            );
+            part.setContents('3');
+            break;
 
         default:
             part = SyntaxElementMorph.prototype.originalLabelPart_Makers(spec);

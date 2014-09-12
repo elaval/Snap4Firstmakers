@@ -313,6 +313,41 @@ Process.prototype.makersReadSensor = function(pin)
 
 };
     
+Process.prototype.makersReportDigitalPin = function(pin)
+{
+    var sprite = this.homeContext.receiver;
+
+	if (sprite.makersIsBoardConnected()) {
+		switch(pin) {
+		    case 3:
+		        return this.reportDigitalReading(3);
+		        break;
+		    case 8:
+		        return this.reportDigitalReading(8);
+		        break;
+		    case 9:
+		        return this.reportDigitalReading(9);
+		        break;
+		    case 10:
+		        return this.reportDigitalReading(10);
+		        break;
+		    case 11:
+		        return this.reportDigitalReading(11);
+		        break;
+		    case 12:
+		        return this.reportDigitalReading(12);
+		        break;
+		    default:
+		    	throw new Error(localize("Invalid pin "+pin+"\n(should be 3, 8, 9, 10, 11 or 12"));
+		        break;
+		}
+	} else {
+		throw new Error(localize("Arduino not connected"))
+	}
+
+
+};
+
 
 
 /*
@@ -392,8 +427,120 @@ Process.prototype.makersSendTweet = function(msg) {
 };
 
 
+/**
+ * Gets temperature from http://api.openweathermap.org
+ */
+Process.prototype.reportWeather = function (location) {
+    var response;
+    if (!this.httpRequest) {
+        this.httpRequest = new XMLHttpRequest();
+        this.httpRequest.open("GET", 'http://api.openweathermap.org/data/2.5/find?q=' + location, true);
+        this.httpRequest.send(null);
+    } else if (this.httpRequest.readyState === 4) {
+        response = JSON.parse(this.httpRequest.responseText);
+
+        this.httpRequest = null;
+        // return temp in Celcius
+        return response.list[0].main.temp-273.15;
+    }
+    this.pushContext('doYield');
+    this.pushContext();
+};
 
 
+Process.prototype.reportXively = function(feed, datastream, key) {
+	var request = require('request');
+
+	if (!this.xivelyRequest) {
+		this.xivelyResponse = null
+		var url = 'https://api.xively.com/v2/feeds/'+feed+'/datastreams/'+datastream+'.json?key='+key
+		this.xivelyRequest = request(url, function (error, response, body) {
+		  if (!error && response.statusCode == 200) {
+		    console.log(body) // Print the google web page.
+		    this.xivelyResponse = response;
+		  }
+		}.bind(this))
+	} else if (this.xivelyResponse) {
+		this.xivelyRequest = null;
+		return JSON.parse(this.xivelyResponse.body).current_value;
+	}
+
+	this.pushContext('doYield');
+    this.pushContext();
+}
+
+Process.prototype.setThingSpeakKey = function(key) {
+	var sprite = this.homeContext.receiver;
+
+	sprite.arduino.thingSpeakKey = key
+}
+
+Process.prototype.setThingSpeakChannel = function(key) {
+	var sprite = this.homeContext.receiver;
+
+	sprite.arduino.thingSpeakChannel = key
+}
+
+
+Process.prototype.reportThingSpeak = function(field, key) {
+	var sprite = this.homeContext.receiver;
+
+	var key = sprite.arduino.thingSpeakKey ? sprite.arduino.thingSpeakKey : null;
+	var channel = sprite.arduino.thingSpeakChannel ? sprite.arduino.thingSpeakChannel : null;
+
+	var request = require('request');
+
+	if (!this.thingSpeakRequest) {
+		this.thingSpeakResponse = null
+		var url = 'https://api.thingspeak.com/channels/'+channel+'/field/'+field+'/last?key='+key;
+		this.thingSpeakRequest = request(url, function (error, response, body) {
+		  if (!error && response.statusCode == 200) {
+		    this.thingSpeakResponse = response;
+		  } else if (!error){
+		  	this.thingSpeakRequest = null;
+		  	throw new Error(localize('Wrong request (have you set the API / Channel?)'));
+		  	return
+		  } else {
+		  	this.thingSpeakRequest = null;
+		  	throw new Error(localize(error));
+		  	return
+		  }
+		}.bind(this))
+	} else if (this.thingSpeakResponse) {
+		this.thingSpeakRequest = null;
+		return this.thingSpeakResponse.body;
+	}
+
+	this.pushContext('doYield');
+    this.pushContext();
+}
+
+Process.prototype.updateThingSpeak = function(field, value) {
+	var sprite = this.homeContext.receiver;
+
+	var key = sprite.arduino.thingSpeakKey ? sprite.arduino.thingSpeakKey : null;
+	var channel = sprite.arduino.thingSpeakChannel ? sprite.arduino.thingSpeakChannel : null;
+
+	var request = require('request');
+
+	if (!this.thingSpeakRequest) {
+		this.thingSpeakResponse = null
+
+		https://api.thingspeak.com/update?key=1155AFI7EP6R8ECW&field1=1
+		var url = 'https://api.thingspeak.com/update?key='+key+'&field'+field+'='+value;
+		this.thingSpeakRequest = request.post(url, function (error, response, body) {
+		  if (!error && response.statusCode == 200) {
+		    this.thingSpeakResponse = response;
+		  }
+		}.bind(this))
+	} else if (this.thingSpeakResponse) {
+		this.thingSpeakRequest = null;
+		return this.thingSpeakResponse.body;
+	}
+
+	this.pushContext('doYield');
+    this.pushContext();
+}
 
 
 

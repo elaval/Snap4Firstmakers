@@ -25,7 +25,7 @@ WorldMorph.prototype.makers.convertAnalogMeasure = {
 
     // Potentiometer - gives (0 to 5 volts)
     'potentiometer' : function(val) {
-        var maxVal = 1023*20000.0/20100;
+        var maxVal = 1023*20000.0/20000;
         var percentage = 100.0*(maxVal-val)/maxVal;
 
         percentage = percentage < 0 ? 0 : percentage;
