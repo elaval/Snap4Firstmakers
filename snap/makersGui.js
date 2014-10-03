@@ -159,3 +159,19 @@ IDE_Morph.prototype.settingsMenu = function () {
 };
 
 
+// Fix probelm with connected board when creating a new project 
+// If the board is connected (it is not freed for the new srpites)
+IDE_Morph.prototype.originalnNewProject = IDE_Morph.prototype.newProject
+
+
+IDE_Morph.prototype.newProject = function () {
+    // Disconnect each sprite before creating the new project
+    var sprites = this.sprites.asArray()
+    sprites.forEach(function(sprite) {
+        if (sprite.arduino && sprite.arduino.board) {
+            sprite.arduinoDisconnect();
+        }
+    })
+    this.originalnNewProject();
+};
+
