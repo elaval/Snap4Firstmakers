@@ -51,15 +51,18 @@ IDE_Morph.prototype.createLogo = function () {
 /**
  * Override setLanguage function for s4a & makers
  */
+IDE_Morph.prototype.setLanguageS4A = IDE_Morph.prototype.setLanguage;
+
+/*
 IDE_Morph.prototype.setLanguage = function(lang, callback) {
     var myself = this;
 
-    myself.setLanguageSnap(lang, function() {
-        myself.setLanguageS4A(lang, function() {
+    myself.setLanguageS4A(lang, function() {
             myself.setLanguageMakers(lang, callback);
-        });
     });
+
 };
+*/
 
 
 IDE_Morph.prototype.setLanguageMakers = function (lang, callback) {
@@ -83,3 +86,31 @@ IDE_Morph.prototype.setLanguageMakers = function (lang, callback) {
     makers_translation.src = makers_src;
 
 };
+
+IDE_Morph.prototype.originalToggleAppMode = IDE_Morph.prototype.toggleAppMode;
+
+IDE_Morph.prototype.toggleAppMode = function(mode) {
+    this.originalToggleAppMode(mode);
+    this.controlBar.cloudButton.hide();
+}
+
+// Fix to S4A bug when hiding cloud button (hides also other buttons)
+IDE_Morph.prototype.buildPanes = function (){
+    var myself = this;
+
+    this.originalBuildPanes();
+    this.controlBar.cloudButton.hide();
+    
+    this.controlBar.originalFixLayout = this.controlBar.fixLayout;
+
+    overridenFixLayout = function () {
+        myself.controlBar.originalFixLayout();
+        myself.controlBar.projectButton.setLeft(150);
+        myself.controlBar.updateLabel()
+    };
+
+    this.controlBar.fixLayout = overridenFixLayout;
+};
+
+//IDE_Morph.prototype.buildPanes = IDE_Morph.prototype.originalBuildPanes
+
