@@ -370,7 +370,7 @@ function overridenBlockTemplates(category) {
     var arduinoConnectButton = new PushButtonMorph(
             null,
             function () {
-                myself.arduinoConnect();
+                myself.arduinoAttemptConnection();
             },
             'Connect Arduino'
     );
