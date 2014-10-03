@@ -114,3 +114,48 @@ IDE_Morph.prototype.buildPanes = function (){
 
 //IDE_Morph.prototype.buildPanes = IDE_Morph.prototype.originalBuildPanes
 
+// Modify settings menu to add basic/advanced mode for makers
+IDE_Morph.prototype.originalSettingsMenu = IDE_Morph.prototype.settingsMenu;
+
+IDE_Morph.prototype.settingsMenu = function () {
+    var menu,
+        stage = this.stage,
+        world = this.world(),
+        myself = this,
+        pos = this.controlBar.settingsButton.bottomLeft(),
+        shiftClicked = (world.currentKey === 16);
+
+    function addPreference(label, toggle, test, onHint, offHint, hide) {
+        var on = '\u2611 ',
+            off = '\u2610 ';
+        if (!hide || shiftClicked) {
+            menu.addItem(
+                (test ? on : off) + localize(label),
+                toggle,
+                test ? onHint : offHint,
+                hide ? new Color(100, 0, 0) : null
+            );
+        }
+    }
+
+    this.originalSettingsMenu();
+
+    menu = world.activeMenu;
+
+    menu.addLine();
+
+    addPreference(
+        'Makers basic mode',
+        function () {
+            world.isMakersBasicMode = !world.isMakersBasicMode; 
+            myself.refreshIDE();
+        },
+        world.isMakersBasicMode,
+        'uncheck to advanced mode (more block options)',
+        'check to enable basic mode (reduced blockoptins)'
+    );
+
+    menu.popup(world, pos);
+};
+
+
