@@ -2,16 +2,14 @@
 
 SpriteIconMorph.prototype.originalUserMenu = SpriteIconMorph.prototype.userMenu;
 
-overridenUserMenu = function () {
+SpriteIconMorph.prototype.userMenu = function () {
 	menu = this.originalUserMenu();
 	menu.addLine();
 	var myself = this;
-	menu.addItem('connect to Arduino', function() { myself.object.arduinoAttemptConnection() });
-	menu.addItem('disconnect Arduino', function() { myself.object.arduinoDisconnect() });
+	menu.addItem('connect to Arduino', function() { myself.object.arduino.attemptConnection() });
+	menu.addItem('disconnect Arduino', function() { myself.object.arduino.disconnect() });
 	return menu;
 }
-
-SpriteIconMorph.prototype.userMenu = overridenUserMenu;
 
 
 // Addessing issue #24 : https://github.com/edutec/Snap4Arduino/issues/24
@@ -21,7 +19,7 @@ SpriteIconMorph.prototype.userMenu = overridenUserMenu;
 
 IDE_Morph.prototype.originalBuildPanes = IDE_Morph.prototype.buildPanes;
 
-overridenBuildPanes = function (){
+IDE_Morph.prototype.buildPanes = function (){
 	var myself = this;
 
 	this.originalBuildPanes();
@@ -29,26 +27,29 @@ overridenBuildPanes = function (){
 	
 	this.controlBar.originalFixLayout = this.controlBar.fixLayout;
 
-	overridenFixLayout = function () {
+	this.controlBar.fixLayout = function () {
+        myself.controlBar.originalFixLayout();
 		myself.controlBar.projectButton.setLeft(150);
 		myself.controlBar.updateLabel()
 	};
-
-	this.controlBar.fixLayout = overridenFixLayout;
 };
 
-IDE_Morph.prototype.buildPanes = overridenBuildPanes;
+// Hide cloud button when toggleAppMode is called (when changing language, opening projects, ...)
+IDE_Morph.prototype.originalToggleAppMode = IDE_Morph.prototype.toggleAppMode;
+
+IDE_Morph.prototype.toggleAppMode = function(mode) {
+    this.originalToggleAppMode(mode);
+    this.controlBar.cloudButton.hide();
+}
 
 
 // Remove cloud button from dialogs
 
 ProjectDialogMorph.prototype.originalAddSourceButton = ProjectDialogMorph.prototype.addSourceButton;
 
-overridenAddSourceButton = function(source, label, symbol) {
+ProjectDialogMorph.prototype.addSourceButton = function(source, label, symbol) {
 	if (source != 'cloud') { this.originalAddSourceButton(source, label, symbol) }
 }
-
-ProjectDialogMorph.prototype.addSourceButton = overridenAddSourceButton;
 
 
 // Override Snap! menu to show stuff about Snap4Arduino as well
@@ -272,5 +273,21 @@ IDE_Morph.prototype.setLanguage = function (lang, callback) {
     document.head.appendChild(s4a_translation);
     s4a_translation.src = s4a_src;
 
+};
+
+// Fix probelm with connected board when creating a new project 
+// If the board is connected (it is not freed for the new srpites)
+IDE_Morph.prototype.originalnNewProject = IDE_Morph.prototype.newProject
+
+
+IDE_Morph.prototype.newProject = function () {
+    // Disconnect each sprite before creating the new project
+    var sprites = this.sprites.asArray()
+    sprites.forEach(function(sprite) {
+        if (sprite.arduino && sprite.arduino.board) {
+            sprite.arduino.disconnect();
+        }
+    })
+    this.originalnNewProject();
 };
 

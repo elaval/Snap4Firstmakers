@@ -20,7 +20,7 @@ function pinsSetToMode(aMode) {
 
 SyntaxElementMorph.prototype.originalLabelPart = SyntaxElementMorph.prototype.labelPart;
 
-function overridenLabelPart(spec) {
+SyntaxElementMorph.prototype.labelPart = function(spec) {
 	var part;
 	switch (spec) {
 		case '%port':
@@ -28,7 +28,7 @@ function overridenLabelPart(spec) {
 				null,
 				false,
 				function() {
-					return world.arduino.portList;
+					return world.Arduino.portList;
 				},
 			   	true
 				);
@@ -39,12 +39,11 @@ function overridenLabelPart(spec) {
 				false,
 				{
 					'angle (0-180)' : 90,
-					'stopped' : ['stopped'] , 
-					'clockwise' : ['clockwise'] ,
+					'stopped' : ['stopped'], 
+					'clockwise' : ['clockwise'],
 				 	'counter-clockwise' : ['counter-clockwise']
 				}
 				);
-			part.setContents(['clockwise']);
 			break;
 		case '%pinMode':
 			part = new InputSlotMorph(
@@ -53,12 +52,11 @@ function overridenLabelPart(spec) {
 				{
 					'digital input' : ['digital input'],
 					'digital output' : ['digital output'] ,
-				 	'PWM' : ['PWM'] ,
+				 	'PWM' : ['PWM'],
 				 	'servo' : ['servo']
 				},
 				true
 				);
-			part.setContents(['servo']);
 			break;
 		case '%servoPin':
 			part = new InputSlotMorph(
@@ -141,4 +139,3 @@ function overridenLabelPart(spec) {
 	return part;
 }
 
-SyntaxElementMorph.prototype.labelPart = overridenLabelPart

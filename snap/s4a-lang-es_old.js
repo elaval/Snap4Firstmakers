@@ -41,37 +41,7 @@ s4aTempDict = {
     */
 
     // arduino:
-	'digital input':
-		'entrada digital',
-
-	'digital output':
-		'salida digital',
-
-	'PWM':
-		'PWM',
-
-	'servo':
-		'servo',
-
-	'clockwise':
-		'sentido horario',
-
-	'counter-clockwise':
-		'sentido anti-horario',
-
-	'stopped':
-		'parado',
-
-	'angle (0-180)':
-		'ángulo (0-180)',
-
-    'connect to Arduino':
-        'conectar a Arduino',
-
-    'disconnect Arduino':
-        'desconectar Arduino',
-
-	'Connect Arduino':
+    'Connect Arduino':
         'Conectar Arduino',
 
     'Disconnect Arduino':
@@ -117,7 +87,7 @@ s4aTempDict = {
         'Ya existe una tarjeta conectada a este objeto',
 
     'Could not connect an Arduino\nNo boards found':
-        'No se pudo conectar un Arduino\nNo se encontró ninguna tarjeta',
+        'No se pudo conectar un Arduino\nNo es encontró ninguna tarjeta',
 
     'Could not talk to Arduino in port\n':
         'No se pudo comunicar con Arduino en la puerta\n',

@@ -2,7 +2,7 @@
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<title>Snap4Arduino 1.0.3-alpha</title>
+		<title>Snap4Arduino 1.0.4-alpha</title>
         <link rel="shortcut icon" href="http://snap.berkeley.edu/fav3.gif" type="image/gif">
 		<script type="text/javascript" src="morphic.js"></script>
 		<!-- <Snap4Arduino> -->
@@ -30,6 +30,9 @@
 		<script type="text/javascript" src="byob.js"></script>
 		<script type="text/javascript" src="xml.js"></script>
 		<script type="text/javascript" src="store.js"></script>
+		<!-- <Snap4Arduino> -->
+		<script type="text/javascript" src="s4aStore.js"></script>
+		<!-- </Snap4Arduino> -->
 		<script type="text/javascript" src="locale.js"></script>
 		<script type="text/javascript" src="cloud.js"></script>
 		<script type="text/javascript" src="sha512.js"></script>
@@ -41,16 +44,33 @@
 				process.exit(1);
     		});*/
 			var world;
+			var ide;
+
 			window.onload = function () {
 				world = new WorldMorph(document.getElementById('world'));
-				new IDE_Morph().openIn(world);
+
+				ide = new IDE_Morph();
+				ide.openIn(world);
+
+				ide.inform = function(title, message, callback) { 
+						var myself = this;
+						if (!myself.informing) {
+							var box = new DialogBoxMorph();
+							myself.informing = true;
+							box.ok = function() { 
+								myself.informing = false;
+								if (callback) { callback() };
+								this.accept();
+							};
+							box.inform(title, message, world)
+						}
+				};
+
 				setInterval(loop, 1);
 
 				// Starts arduino related processes
-				world.arduino.start();
+				world.Arduino.start();
 			};
-
-			function inform(title, message) { (new DialogBoxMorph()).inform(title, message, world) };
 
 			function loop() {
 				world.doOneCycle();
