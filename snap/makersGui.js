@@ -53,7 +53,7 @@ IDE_Morph.prototype.createLogo = function () {
  */
 IDE_Morph.prototype.setLanguageS4A = IDE_Morph.prototype.setLanguage;
 
-/*
+
 IDE_Morph.prototype.setLanguage = function(lang, callback) {
     var myself = this;
 
@@ -62,7 +62,7 @@ IDE_Morph.prototype.setLanguage = function(lang, callback) {
     });
 
 };
-*/
+
 
 
 IDE_Morph.prototype.setLanguageMakers = function (lang, callback) {
@@ -87,35 +87,8 @@ IDE_Morph.prototype.setLanguageMakers = function (lang, callback) {
 
 };
 
-IDE_Morph.prototype.originalToggleAppMode = IDE_Morph.prototype.toggleAppMode;
-
-IDE_Morph.prototype.toggleAppMode = function(mode) {
-    this.originalToggleAppMode(mode);
-    this.controlBar.cloudButton.hide();
-}
-
-// Fix to S4A bug when hiding cloud button (hides also other buttons)
-IDE_Morph.prototype.buildPanes = function (){
-    var myself = this;
-
-    this.originalBuildPanes();
-    this.controlBar.cloudButton.hide();
-    
-    this.controlBar.originalFixLayout = this.controlBar.fixLayout;
-
-    overridenFixLayout = function () {
-        myself.controlBar.originalFixLayout();
-        myself.controlBar.projectButton.setLeft(150);
-        myself.controlBar.updateLabel()
-    };
-
-    this.controlBar.fixLayout = overridenFixLayout;
-};
-
-//IDE_Morph.prototype.buildPanes = IDE_Morph.prototype.originalBuildPanes
-
 // Modify settings menu to add basic/advanced mode for makers
-IDE_Morph.prototype.originalSettingsMenu = IDE_Morph.prototype.settingsMenu;
+IDE_Morph.prototype.originalSnap4ArduinoSettingsMenu = IDE_Morph.prototype.settingsMenu;
 
 IDE_Morph.prototype.settingsMenu = function () {
     var menu,
@@ -138,7 +111,7 @@ IDE_Morph.prototype.settingsMenu = function () {
         }
     }
 
-    this.originalSettingsMenu();
+    this.originalSnap4ArduinoSettingsMenu();
 
     menu = world.activeMenu;
 
@@ -159,19 +132,5 @@ IDE_Morph.prototype.settingsMenu = function () {
 };
 
 
-// Fix probelm with connected board when creating a new project 
-// If the board is connected (it is not freed for the new srpites)
-IDE_Morph.prototype.originalnNewProject = IDE_Morph.prototype.newProject
 
-
-IDE_Morph.prototype.newProject = function () {
-    // Disconnect each sprite before creating the new project
-    var sprites = this.sprites.asArray()
-    sprites.forEach(function(sprite) {
-        if (sprite.arduino && sprite.arduino.board) {
-            sprite.arduinoDisconnect();
-        }
-    })
-    this.originalnNewProject();
-};
 

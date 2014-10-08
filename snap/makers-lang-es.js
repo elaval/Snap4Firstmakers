@@ -93,11 +93,38 @@ makersTempDict = {
     'switch':
         'botón',
 
+    'turn on pin %actuatorPin':
+        'prender pin %actuatorPin',
+
+    'turn off pin %actuatorPin':
+        'apagar pin %actuatorPin',
+
+    'set pwm %pwmPin to %pwmValue':
+        'fijar pwm %pwmPin en %pwmValue',
+
+    'read analog %sensorPin':
+        'leer pin análogo %sensorPin',
+
+    'read digital %digitalPin':
+        'leer pin digital %digitalPin',
+
     'Authorize Twitter Account':
         'Autorizar cuenta Twitter',
 
     'send Tweet %s':
         'enviar Tweet %s',
+
+    'temperature in %s': 
+        'temperatura en %s',
+
+    'xively read datastream %s from feed %s with key %s': 
+        'xively leer datastream %s de feed %s con clave %s',
+
+    'thingspeak read field %s from channel %s with key %s': 
+        'thingspeak leer campo %s de canal %s con clave %s',
+
+    'thingspeak set value %s at field %s in channel %s with key %s': 
+        'thingspeak fijar valor %s en campo %s para canal %s con clave %s',
 
     'Arduino not connected':
         'Arduino no está conectado',

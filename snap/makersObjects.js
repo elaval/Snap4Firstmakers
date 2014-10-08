@@ -59,10 +59,10 @@ SpriteMorph.prototype.blockColor = {
 };
 
 
-SpriteMorph.prototype.originalInitBlocks = SpriteMorph.prototype.initBlocks;
+SpriteMorph.prototype.originalSnap4ArduinoInitBlocks = SpriteMorph.prototype.initBlocks;
 
 SpriteMorph.prototype.initBlocks = function () {
-    SpriteMorph.prototype.originalInitBlocks();
+    SpriteMorph.prototype.originalSnap4ArduinoInitBlocks();
 
 
 
@@ -202,6 +202,14 @@ SpriteMorph.prototype.initBlocks = function () {
         spec: 'read digital %digitalPin'
     };
     
+    SpriteMorph.prototype.blocks.makersServoWrite =
+    {
+        type: 'command',
+        category: 'makers',
+        spec: 'servo %digitalPin to %servoValue',
+        defaults: [null, 'clockwise']
+    };
+    
     
     // Redirects user to a web page (on local brower) for getting a PIN number from Twitter
     SpriteMorph.prototype.blocks.makersGetTwitterPin =
@@ -248,30 +256,15 @@ SpriteMorph.prototype.initBlocks = function () {
     {
             type: 'reporter',
             category: 'internet',
-            spec: 'xively feed %s \ndatastream %s \nkey %s',
+            spec: 'xively read datastream %s from feed %s with key %s',
             defaults: ['582358762','temperature', '4Q2cTD5DAkjFtFVqoi7zrKdwNchYDoPSKVrcoqSAU5OvzdnV']
-    };
-
-    SpriteMorph.prototype.blocks.setThingSpeakKey = 
-    {
-            type: 'command',
-            category: 'internet',
-            spec: 'thingspeak key %s',
-    };
-
-    SpriteMorph.prototype.blocks.setThingSpeakChannel = 
-    {
-            type: 'command',
-            category: 'internet',
-            spec: 'thingspeak channel %s',
-            defaults: ['14650']
     };
 
     SpriteMorph.prototype.blocks.reportThingSpeak = 
     {
             type: 'reporter',
             category: 'internet',
-            spec: 'get thingspeak field %s',
+            spec: 'thingspeak read field %s from channel %s with key %s',
             defaults: ['1']
     };
 
@@ -279,8 +272,8 @@ SpriteMorph.prototype.initBlocks = function () {
     {
             type: 'command',
             category: 'internet',
-            spec: 'set thingspeak field %s value %s',
-            defaults: ['1','0']
+            spec: 'thingspeak set value %s at field %s in channel %s with key %s',
+            defaults: ['0','1']
     };
 
 
@@ -370,7 +363,7 @@ function overridenBlockTemplates(category) {
     var arduinoConnectButton = new PushButtonMorph(
             null,
             function () {
-                myself.arduinoAttemptConnection();
+                myself.arduino.attemptConnection();
             },
             'Connect Arduino'
     );
@@ -381,7 +374,7 @@ function overridenBlockTemplates(category) {
     var arduinoDisconnectButton = new PushButtonMorph(
             null,
             function () {
-                myself.arduinoDisconnect();;
+                myself.arduino.disconnect();;
             },
             'Disconnect Arduino'
     );
@@ -1208,6 +1201,8 @@ function overridenBlockTemplates(category) {
         blocks.push('-');
         blocks.push(blockBySelector('makersReadSensor'));
         blocks.push(blockBySelector('makersReportDigitalPin'));
+        blocks.push('-');
+        blocks.push(blockBySelector('makersServoWrite'));
 
     } else if (category === 'internet') {
         blocks.push('-');
@@ -1218,14 +1213,13 @@ function overridenBlockTemplates(category) {
         blocks.push('-');
         blocks.push(block('reportWeather'));
         blocks.push('-');
-        /*
-        blocks.push(block('reportXively'));
-        blocks.push('-');
-        blocks.push(block('setThingSpeakKey'));
-        blocks.push(block('setThingSpeakChannel'));
-        blocks.push(block('reportThingSpeak'));
-        blocks.push(block('updateThingSpeak'));
-        */
+
+        if (!world.isMakersBasicMode) {
+            blocks.push(block('reportXively'));
+            blocks.push('-');
+            blocks.push(block('reportThingSpeak'));
+            blocks.push(block('updateThingSpeak'));
+        } 
     }
 
     return blocks;

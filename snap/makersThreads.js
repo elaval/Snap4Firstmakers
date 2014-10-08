@@ -348,6 +348,38 @@ Process.prototype.makersReportDigitalPin = function(pin)
 
 };
 
+Process.prototype.makersServoWrite = function(pin,value)
+{
+    var sprite = this.homeContext.receiver,
+    board = sprite.arduino.board;
+
+	if (sprite.makersIsBoardConnected()) {
+		this.setPinMode(pin,['servo']);
+		var numericValue;
+		switch (value[0]) {
+			case "clockwise":
+				numericValue = 1200;
+			break;
+			case "counter-clockwise":
+				numericValue = 1700;
+			break;
+			case "stopped":
+				numericValue = 1500;
+			break;
+			default:
+				numericValue = value;
+			break;
+		}
+		board.servoWrite(pin, numericValue);
+		return null;
+
+		
+	} else {
+		throw new Error(localize("Arduino not connected"))
+	}
+};
+
+
 
 
 /*
@@ -448,7 +480,7 @@ Process.prototype.reportWeather = function (location) {
 };
 
 
-Process.prototype.reportXively = function(feed, datastream, key) {
+Process.prototype.reportXively = function(datastream, feed, key) {
 	var request = require('request');
 
 	if (!this.xivelyRequest) {
@@ -482,23 +514,25 @@ Process.prototype.setThingSpeakChannel = function(key) {
 }
 
 
-Process.prototype.reportThingSpeak = function(field, key) {
-	var sprite = this.homeContext.receiver;
-
-	var key = sprite.arduino.thingSpeakKey ? sprite.arduino.thingSpeakKey : null;
-	var channel = sprite.arduino.thingSpeakChannel ? sprite.arduino.thingSpeakChannel : null;
-
-	var request = require('request');
+Process.prototype.reportThingSpeak = function(field, channel, key) {
+	var sprite = this.homeContext.receiver,
+		url,
+		request = require('request');
 
 	if (!this.thingSpeakRequest) {
 		this.thingSpeakResponse = null
-		var url = 'https://api.thingspeak.com/channels/'+channel+'/field/'+field+'/last?key='+key;
+		if (key) {
+			url = 'https://api.thingspeak.com/channels/'+channel+'/field/'+field+'/last?key='+key;
+		} else {
+			url = 'https://api.thingspeak.com/channels/'+channel+'/field/'+field+'/last';
+		}
+
 		this.thingSpeakRequest = request(url, function (error, response, body) {
 		  if (!error && response.statusCode == 200) {
 		    this.thingSpeakResponse = response;
 		  } else if (!error){
 		  	this.thingSpeakRequest = null;
-		  	throw new Error(localize('Wrong request (have you set the API / Channel?)'));
+		  	throw new Error(localize('Wrong request (have you set the right Channel / Key?)'));
 		  	return
 		  } else {
 		  	this.thingSpeakRequest = null;
@@ -515,19 +549,21 @@ Process.prototype.reportThingSpeak = function(field, key) {
     this.pushContext();
 }
 
-Process.prototype.updateThingSpeak = function(field, value) {
-	var sprite = this.homeContext.receiver;
 
-	var key = sprite.arduino.thingSpeakKey ? sprite.arduino.thingSpeakKey : null;
-	var channel = sprite.arduino.thingSpeakChannel ? sprite.arduino.thingSpeakChannel : null;
+Process.prototype.updateThingSpeak = function(value, field, channel, key) {
+	var sprite = this.homeContext.receiver,
+		url;
+
+	//var key = sprite.arduino.thingSpeakKey ? sprite.arduino.thingSpeakKey : null;
+	//var channel = sprite.arduino.thingSpeakChannel ? sprite.arduino.thingSpeakChannel : null;
 
 	var request = require('request');
 
 	if (!this.thingSpeakRequest) {
 		this.thingSpeakResponse = null
 
-		https://api.thingspeak.com/update?key=1155AFI7EP6R8ECW&field1=1
-		var url = 'https://api.thingspeak.com/update?key='+key+'&field'+field+'='+value;
+		url = 'https://api.thingspeak.com/update?key='+key+'&field'+field+'='+value;
+
 		this.thingSpeakRequest = request.post(url, function (error, response, body) {
 		  if (!error && response.statusCode == 200) {
 		    this.thingSpeakResponse = response;
@@ -541,7 +577,6 @@ Process.prototype.updateThingSpeak = function(field, value) {
 	this.pushContext('doYield');
     this.pushContext();
 }
-
 
 
 
