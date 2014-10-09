@@ -245,6 +245,8 @@ SpriteMorph.prototype.initBlocks = function() {
 
 }
 
+SpriteMorph.prototype.initBlocks();
+
 // blockTemplates proxy
 
 SpriteMorph.prototype.originalBlockTemplates = SpriteMorph.prototype.blockTemplates;
