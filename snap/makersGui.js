@@ -51,18 +51,15 @@ IDE_Morph.prototype.createLogo = function () {
 /**
  * Override setLanguage function for s4a & makers
  */
-IDE_Morph.prototype.setLanguageS4A = IDE_Morph.prototype.setLanguage;
-
-
 IDE_Morph.prototype.setLanguage = function(lang, callback) {
     var myself = this;
 
-    myself.setLanguageS4A(lang, function() {
+    myself.originalSetLanguage(lang, function() {
+        myself.setLanguageS4A(lang, function() {
             myself.setLanguageMakers(lang, callback);
+        });
     });
-
 };
-
 
 
 IDE_Morph.prototype.setLanguageMakers = function (lang, callback) {
