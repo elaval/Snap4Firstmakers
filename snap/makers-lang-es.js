@@ -40,6 +40,62 @@ makersTempDict = {
         without breaking its functionality.
     */
 
+    // menus:
+    
+    'About Snap!...':
+        'Acerca de Snap ...',
+
+    'Snap! reference manual.':
+        'Manual de referencia de Snap',
+
+    'Snap4Arduino website':
+        'Sitio web de Snap4Arduino',
+
+    'Download Snap! source':
+        'Descargar código fuente de Snap',
+
+    'Snap4Arduino repository':
+        'Repositorio de Snap4Arduino',
+
+    'Libraries...':
+        'Librerías...',
+
+    'Zoom blocks...':
+        'Zoom en bloques...',
+
+    'Stage size...':
+        'Tamaño del escenario ...',
+
+    'Plain prototype labels':
+        'Etiquetas de prototipos planas',
+
+    'Turbo mode':
+        'Modo turbo',
+
+    'Flat design':
+        'Diseño plano',
+
+    'Prefer smooth animations':
+        'Preferir animaciones suaves',
+
+    'Flat line ends':
+        'Fin de líneas plano',
+
+    'Codification support':
+        'Apoyo en la codificación',
+
+    'Makers basic mode':
+        'Makers en modo básico',
+
+    // mensajes:
+
+    'Opening project...':
+        'Abriendo el proyecto...',
+
+    'Untitled':
+        'Sin título',
+
+
     // makers:
     
     'turn on led %ledcolor':
