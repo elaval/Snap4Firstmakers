@@ -200,7 +200,12 @@ IDE_Morph.prototype.projectMenu = function () {
 };
 
 
+IDE_Morph.prototype.originalSnap4Arduinoinit =  IDE_Morph.prototype.init;
 
+IDE_Morph.prototype.init = function (isAutoFill) {
+    this.originalSnap4Arduinoinit(isAutoFill);
 
+    this.currentCategory = 'makers';
+}
 
 
