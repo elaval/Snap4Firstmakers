@@ -12,13 +12,21 @@ Process.prototype.makersLedOn = function (ledcolor) {
 		        this.digitalWrite(13,true);
 		        break;
 		    case 'r':
-		        this.digitalWrite(7,true);
+		    	if (world.isMakersV1) {
+		    		this.digitalWrite(4,true);
+		    	} else {
+		    		this.digitalWrite(7,true);
+		    	}
 		        break;
 		    case 'y':
 		        this.digitalWrite(5,true);
 		        break;
 		    case 'g':
-		        this.digitalWrite(4,true);
+		    	if (world.isMakersV1) {
+		    		this.digitalWrite(7,true);
+		    	} else {
+		    		this.digitalWrite(4,true);
+		    	}
 		        break;
 		    default:
 		        ;
@@ -41,13 +49,21 @@ Process.prototype.makersLedOff = function (ledcolor) {
 		        this.digitalWrite(13,false);
 		        break;
 		    case 'r':
-		        this.digitalWrite(7,false);
+		    	if (world.isMakersV1) {
+		    		this.digitalWrite(4,false);
+		    	} else {
+		    		this.digitalWrite(7,false);
+		    	}
 		        break;
 		    case 'y':
 		        this.digitalWrite(5,false);
 		        break;
 		    case 'g':
-		        this.digitalWrite(4,false);
+		    	if (world.isMakersV1) {
+		    		this.digitalWrite(7,false);
+		    	} else {
+		    		this.digitalWrite(4,false);
+		    	}
 		        break;
 		    default:
 		        ;

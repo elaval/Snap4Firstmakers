@@ -60,6 +60,21 @@ makersTempDict = {
     'Libraries...':
         'Librerías...',
 
+    'Load examples...':
+        'Cargar ejemplos...',
+
+    'Load example':
+        'Cargar ejemplo',
+
+    'Blink (Turn on/off led)':
+        'Blink (Prender/apagar luz)', 
+
+    'Test FirstMakers Board':
+        'Test de tarjeta FirstMakers', 
+
+    'FirstMakers v1.0 compatible':
+        'Compatible con FirstMakers v1.0', 
+
     'Zoom blocks...':
         'Zoom en bloques...',
 

@@ -2,7 +2,7 @@
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<title>First Makers 0.0.7</title>
+		<title>First Makers 0.0.8</title>
         <link rel="shortcut icon" href="http://snap.berkeley.edu/fav3.gif" type="image/gif">
 		<script type="text/javascript" src="morphic.js"></script>
 		<!-- <Snap4Arduino> -->
@@ -49,21 +49,13 @@
 		<!-- </FirstMakers> -->
 
 		<script type="text/javascript">
-		if (!window.location.hash) {
-			// Load initial sprites & project
-			var fs = require('fs');
-			var startupProject = fs.readFileSync('./init.xml').toString();
-
-			window.location.hash = 'open:'+startupProject;
-			location.reload();
-		} else {
 
 			var firmata = require('firmata');
-/*			process.on('uncaughtException' ,function(err){
-        		console.error('uncaughtException:', err);
-        		console.error(err.stack);
+	/*			process.on('uncaughtException' ,function(err){
+	    		console.error('uncaughtException:', err);
+	    		console.error(err.stack);
 				process.exit(1);
-    		});*/
+			});*/
 			var world;
 			var ide;
 
@@ -105,7 +97,7 @@
 					nativeMenuBar.createMacBuiltin("FirstMakers");
 					win.menu = nativeMenuBar;
 			}
-		}
+
 
 		</script>
 	</head>

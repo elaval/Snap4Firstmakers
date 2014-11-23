@@ -26,12 +26,17 @@ WorldMorph.prototype.makers.convertAnalogMeasure = {
     // Potentiometer - gives (0 to 5 volts)
     'potentiometer' : function(val) {
         var maxVal = 1023*20000.0/20000;
-        var percentage = 100.0*(maxVal-val)/maxVal;
+        var percentage = 100.0*(val)/maxVal;
 
+        // For compatibility with version 1.0 of the board (inverser potentiometer readings)
+        if (world.isMakersV1) {
+            percentage = 100.0*(maxVal-val)/maxVal;
+        }
+        
         percentage = percentage < 0 ? 0 : percentage;
         percentage = percentage > 100 ? 100 : percentage;
 
-        // return rouded to 1 decimal
+        // return rounded to 1 decimal
         return Math.round(10*percentage)/10;
     },
 
