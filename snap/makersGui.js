@@ -118,6 +118,7 @@ IDE_Morph.prototype.settingsMenu = function () {
         'Makers basic mode',
         function () {
             world.isMakersBasicMode = !world.isMakersBasicMode; 
+            myself.saveSetting('makersBasicMode', world.isMakersBasicMode);
             myself.refreshIDE();
         },
         world.isMakersBasicMode,
@@ -129,6 +130,7 @@ IDE_Morph.prototype.settingsMenu = function () {
         'FirstMakers v1.0 compatible',
         function () {
             world.isMakersV1 = !world.isMakersV1; 
+            myself.saveSetting('makersV1', world.isMakersBasicMode);
             myself.refreshIDE();
         },
         world.isMakersV1,
@@ -138,6 +140,26 @@ IDE_Morph.prototype.settingsMenu = function () {
 
     menu.popup(world, pos);
 };
+
+
+IDE_Morph.prototype.originalaSnap4ArduionoApplySavedSettings = 
+IDE_Morph.prototype.applySavedSettings;
+
+IDE_Morph.prototype.applySavedSettings = function() {
+
+    this.originalaSnap4ArduionoApplySavedSettings();
+
+    var makersBasicMode = this.getSetting('makersBasicMode'),
+    makersV1 = this.getSetting('makersV1');
+
+    if (makersBasicMode) {
+        world.isMakersBasicMode = makersBasicMode;
+    }
+
+    if (makersV1) {
+        world.isMakersV1 = makersV1;
+    }
+}
 
 
 
