@@ -17,7 +17,11 @@ WorldMorph.prototype.makers.convertAnalogMeasure = {
     // Each 10 mV is 1 degree celsius
     'temperatureLW35' : function(val) {
         var millivolts = val*5000.0/1023.0,
+            celsius = millivolts/29;
+
+        if (world.isMakersV1) {
             celsius = millivolts/10;
+        } 
 
         // return rouded to 1 decimal
         return Math.round(10*celsius)/10;
