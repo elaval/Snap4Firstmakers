@@ -149,15 +149,21 @@ IDE_Morph.prototype.applySavedSettings = function() {
 
     this.originalaSnap4ArduionoApplySavedSettings();
 
-    var makersBasicMode = this.getSetting('makersBasicMode'),
-    makersV1 = this.getSetting('makersV1');
+    // localstorage (and getSetting) gets boolean values as string, so a "false" value is not false.
+    // we use the trick JSON.parse(this.getSetting["x"]) to convet "false" into false and "true" into true
+    var makersBasicMode = JSON.parse(this.getSetting('makersBasicMode')),
+    makersV1 = JSON.parse(this.getSetting('makersV1'));
 
     if (makersBasicMode) {
-        world.isMakersBasicMode = makersBasicMode;
+        world.isMakersBasicMode = true;
+    } else {
+        world.isMakersBasicMode = false;
     }
 
     if (makersV1) {
-        world.isMakersV1 = makersV1;
+        world.isMakersV1 = true;
+    } else {
+        world.isMakersV1 = false;
     }
 }
 
