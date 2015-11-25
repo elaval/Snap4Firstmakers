@@ -2309,3 +2309,267 @@ ______
 141008
 ------
 * Objects: fixed #608, #610
+
+141106
+------
+* Morphic: Enable mouseMove events with right button pressed
+
+141114
+------
+* Threads, Store: Fix reporting out of nested custom C-shaped blocks
+
+141117
+------
+* Threads, Blocks: Treat REPORT blocks inside custom command definitions as STOP THIS BLOCK / IGNORE INPUTS
+
+141120
+------
+* Lists: Fixed #642 avoid “freezing” when calling CONS on non-list/null
+* Threads: Fixed #364 avoid “freezing” when calling LAUNCH on empty ring
+* Threads: Added optional “onComplete” callback to Process, thanks, @bromagosa!
+* GUI: Set Default Save location to Cloud on load, thanks, @cycomachead!
+* GUI: Updated the “About” Dialog with a mention of support from CDG (SAP Labs)
+* BYOB: Percent sign fix for block labels, thanks, @natashasandy!
+* Threads: fix ‘line’ option in ‘split’ block for Windows files, thanks, @brianharvey!
+* Morphic: fix slider range 1, thanks, @tonychenr !
+* translation update, thanks, Manuel!
+
+141121
+------
+* Threads, Blocks: Fix STOP THIS BLOCK’s lexical awareness
+
+1411213
+-------
+* Threads: Fix “stop this block” primitive for tail-call-elimination
+
+1411224
+-------
+* Threads: Fixed #318
+* Objects: Fixed #416
+* Objects: Fixed #372
+* Threads: Fixed #644
+* Store: Fixed #34
+* Threads: Fixed #131
+* snap.html, favicon.ico: new Favicon, thanks, Michael!
+* Threads: improved whitespace detection for “split” primitive, thanks, Michael!
+* Threads: tail-call-elimination for reporters experiment (commented out, under construction)
+
+1411225
+-------
+* Threads: Evaluator optimizations (reducing the stack size for reporters)
+* Threads: Full TCO (tail-call-elimination), now Snap! *is* Scheme :-)
+
+1411225
+-------
+* Threads: Fixed #656
+
+141201
+------
+* Objects: Hide hidden elements in the project thumbnail
+* GUI: Point project dialog to cloud if already signed in, thanks, Michael!
+* favicon: Transparent background, thanks, Michael!
+
+141202
+------
+* New Kannada translation. Yay!! Thanks, Vinayakumar R!!
+
+141203
+------
+* Morphic: Cache actual bounding box of the Pen arrow shape
+* Threads, Objects: Improve edge-collision detection of default sprite “arrow” shape
+
+141204
+------
+* Threads, Objects: Experimental “ForEach” primitive (hidden in dev mode)
+* GUI: Another attempt at pointing the project dialog to the cloud if signed in
+
+141205
+------
+* Morphic: Avoid auto-scaling artefacts in Safari on retina displays (resulting in “traces” when dragging items)
+
+141206
+------
+* Store: Fixed #668
+
+141211
+------
+* Threads: yield after each cycle in the experimental “forEach” primitive
+
+141215
+------
+* New Swedish translation! Yay!! Thanks, Erik A Olsson!
+
+141217
+------
+* Objects, Store: Experimental “processes” count watcher (hidden in dev mode)
+* Threads: Remove terminated processes from expired clones
+* Threads: Let “zombifying” scripts access receivers’ local vars
+
+150112
+------
+* Cloud, GUI: Backend load balancing support, eliminate now obsolete authentication roundtrip, Cloud error message tweaks
+* Store: notify users of potential incompatibilities when opening projects created in other forks (e.g. BeetleBlocks)
+* Threads: Don’t highlight scripts running inside clones (boosts performance), Thanks, @aranlunzer, for the hint!
+* Objects: Disable clones from being edited via their context menus or double-click
+* Italian translation update, thanks, Alberto Firpo!
+* GUI: add additional yields to nextSteps() (work around a bug in Chrome)
+
+150113
+------
+* BYOB: fixed #702
+* GUI: fixed #680
+
+150121
+------
+* Objects: Keep layering of nested sprites thru drag & drop
+* GUI, Store, BYOB: Generate ScriptsPaneTexture programmatically
+* GUI: Fix Zoom Dialog’s sample background in “flat” design
+* Updated Korean and Catalan translations, thanks, Yunjae Jang and Bernat Romagosa!
+* Objects: Fix speech bubbles of dragged nested sprites
+
+150128
+------
+* Objects: Fixed #710
+
+150206
+------
+* GUI: Added url switch #cloud: to open a shared project in edit mode
+
+150220
+------
+* Malayam, Tamil and Telagu translations, thanks, Vinay Kumar!!
+* Un-hide “Save to disk” feature (currently supported by both Chrome and Firefox, but not by Safari)
+* Update German translation
+* GUI: Make “project data in URLs” a hidden dev option (prevent long urls per default)
+
+150223
+------
+* Blocks, Objects: Add user-interaction choices to the “When I am ...” hat block
+* Update German translation
+* Store: Avoid incompatibility warning for very old (pre-earmarked) projects
+
+150224
+------
+* Store: fixed #725
+
+150228
+------
+* Blocks, Store, GUI: Cache inputs, accelerates evaluating recursive reporters and warped / turbo recursive commands by up to 40%
+* Objects: slightly optimize warped / turbo execution
+* Threads: fixed #715
+* BYOB: fixed #716
+
+150302
+------
+* BYOB: fixed #730
+
+150306
+------
+* Blocks: fixed #736
+
+150309
+------
+* Blocks: fixed #738
+* GUI, Blocks: Only enable input caching for blocks
+
+150315
+------
+* Store: fixed #743
+* GUI, html: switch from beta to release candidate
+
+150325
+------
+* Threads: fixed #752
+
+150415
+------
+* Threads: flush Stage>>keysPressed when prompting the user
+* Objects: fixed #770
+
+150426
+------
+* Store: fixed #784
+
+150501
+------
+* Morphic, Blocks: select all text when first clicking an input slot
+* BYOB: indicate numeric inputs in the block prototype with the # sign
+* Threads: return empty string when querying first letter of a list
+* GUI: hide “save to disk” option behind shift-click again (has issues in Chrome)
+* GUI: parameters for embedding projects in iFrames, thanks, Bernat!
+
+=== Release v4.0 ===
+
+150518
+------
+* Objects, GUI: Fix encoding for exported sprites (esp. comments)
+* Portuguese translation update, thanks, Manuel!!
+
+150521
+------
+* BYOB: Fix encoding for exported libraries of global blocks
+
+150523
+------
+* BYOB: Fix encoding glitch
+
+150608
+------
+* Blocks: Fixed #820
+
+150625
+------
+* Morphic, Objects, Blocks, XML: Optimizations and dramatic speed-up. Thanks, Nathan!!
+* Objects: push maximum clone count up to 1000, tweak Note::play
+
+=== v4.0.1 (unreleased) ===
+
+150626
+------
+* Morphic: Fix Inspector duplication, update documentation
+
+150727
+------
+* Polish translation update, thanks, Bartosz Leper!
+* Turkish translation. Yay!! Thanks, Hakan Ataş!
+* Hungarian translation. Yay!! Thanks, Makány György!
+* GUI: relative-url fixes, Thanks, Michael!
+* Morphic: enable exporting a screenshot of the World
+* Morphic: enable more fine-grained control over dragging position correction
+* Morphic: enable all Morphs to “scrollIntoView()”
+* Morpic: keyboard accessibility for menus
+* Objects: fixes and enhancements for nested sprites
+* Blocks, Objects, BYOB, GUI: keyboard editing support
+* Objects, Blocks, Threads, GUI, Store, Widgets: Prototypal inheritance for sprite-local variables
+* Objects, Blocks: enable monitoring closurized non-locals and thread-temporaries (script vars of running processes)
+* GUI: stage resizing handle
+
+150728
+------
+* GUI: fixed relative urls, thanks, Michael!
+* Morphic: escalate origin with “accept” and “cancel” events from text cursors
+* BYOB: keep BlockEditors open when <enter> or <esc> keys are pressed
+* GUI: stop keyboard editing of blocks when selecting another sprite
+
+150730
+------
+* Blocks: improve keyboard editing for embedded rings
+
+150806
+------
+* Polish & German translation updates
+
+=== Release v4.0.2 ===
+
+150809
+------
+* Interlingua support, yay!! thanks, Ken Dickey!
+
+150814
+------
+* Blocks: fixed #907
+
+150915
+------
+* new Croatian translation. Yay!! Thanks, Zeljko Hrvoj!
+* fixed #925

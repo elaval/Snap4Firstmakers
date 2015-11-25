@@ -9,7 +9,7 @@
     written by Jens Mönig
     jens@moenig.org
 
-    Copyright (C) 2014 by Jens Mönig
+    Copyright (C) 2015 by Jens Mönig
 
     This file is part of Snap!.
 
@@ -102,11 +102,11 @@ ArrowMorph, PushButtonMorph, contains, InputSlotMorph, ShadowMorph,
 ToggleButtonMorph, IDE_Morph, MenuMorph, copy, ToggleElementMorph,
 Morph, fontHeight, StageMorph, SyntaxElementMorph, SnapSerializer,
 CommentMorph, localize, CSlotMorph, SpeechBubbleMorph, MorphicPreferences,
-SymbolMorph, isNil*/
+SymbolMorph, isNil, CursorMorph*/
 
 // Global stuff ////////////////////////////////////////////////////////
 
-modules.byob = '2014-September-30';
+modules.byob = '2015-July-28';
 
 // Declarations
 
@@ -209,12 +209,14 @@ CustomBlockDefinition.prototype.copyAndBindTo = function (sprite) {
 
     c.receiver = sprite; // only for (kludgy) serialization
     c.declarations = copy(this.declarations); // might have to go deeper
-    c.body = Process.prototype.reify.call(
-        null,
-        this.body.expression,
-        new List(this.inputNames())
-    );
-    c.body.outerContext = null;
+    if (c.body) {
+        c.body = Process.prototype.reify.call(
+            null,
+            this.body.expression,
+            new List(this.inputNames())
+        );
+        c.body.outerContext = null;
+    }
 
     return c;
 };
@@ -427,6 +429,7 @@ CustomCommandBlockMorph.prototype.refresh = function () {
 
     // find unnahmed upvars and label them
     // to their internal definition (default)
+    this.cachedInputs = null;
     this.inputs().forEach(function (inp, idx) {
         if (inp instanceof TemplateSlotMorph && inp.contents() === '\u2191') {
             inp.setContents(def.inputNames()[idx]);
@@ -441,6 +444,7 @@ CustomCommandBlockMorph.prototype.restoreInputs = function (oldInputs) {
         myself = this;
 
     if (this.isPrototype) {return; }
+    this.cachedInputs = null;
     this.inputs().forEach(function (inp) {
         old = oldInputs[i];
         if (old instanceof ReporterBlockMorph &&
@@ -458,6 +462,7 @@ CustomCommandBlockMorph.prototype.restoreInputs = function (oldInputs) {
         }
         i += 1;
     });
+    this.cachedInputs = null;
 };
 
 CustomCommandBlockMorph.prototype.refreshDefaults = function () {
@@ -470,6 +475,7 @@ CustomCommandBlockMorph.prototype.refreshDefaults = function () {
         }
         idx += 1;
     });
+    this.cachedInputs = null;
 };
 
 CustomCommandBlockMorph.prototype.refreshPrototype = function () {
@@ -688,7 +694,8 @@ CustomCommandBlockMorph.prototype.labelPart = function (spec) {
         return CustomCommandBlockMorph.uber.labelPart.call(this, spec);
     }
     if ((spec[0] === '%') && (spec.length > 1)) {
-        part = new BlockInputFragmentMorph(spec.slice(1));
+        // part = new BlockInputFragmentMorph(spec.slice(1));
+        part = new BlockInputFragmentMorph(spec.replace(/%/g, ''));
     } else {
         part = new BlockLabelFragmentMorph(spec);
         part.fontSize = this.fontSize;
@@ -920,6 +927,9 @@ CustomReporterBlockMorph.prototype.refresh = function () {
     CustomCommandBlockMorph.prototype.refresh.call(this);
     if (!this.isPrototype) {
         this.isPredicate = (this.definition.type === 'predicate');
+    }
+    if (this.parent instanceof SyntaxElementMorph) {
+        this.parent.cachedInputs = null;
     }
     this.drawNew();
 };
@@ -1648,7 +1658,7 @@ BlockEditorMorph.prototype.init = function (definition, target) {
     scripts = new ScriptsMorph(target);
     scripts.isDraggable = false;
     scripts.color = IDE_Morph.prototype.groupColor;
-    scripts.texture = IDE_Morph.prototype.scriptsPaneTexture;
+    scripts.cachedTexture = IDE_Morph.prototype.scriptsPaneTexture;
     scripts.cleanUpMargin = 10;
 
     proto = new PrototypeHatBlockMorph(this.definition);
@@ -1717,8 +1727,9 @@ BlockEditorMorph.prototype.popUp = function () {
 
 // BlockEditorMorph ops
 
-BlockEditorMorph.prototype.accept = function () {
+BlockEditorMorph.prototype.accept = function (origin) {
     // check DialogBoxMorph comment for accept()
+    if (origin instanceof CursorMorph) {return; }
     if (this.action) {
         if (typeof this.target === 'function') {
             if (typeof this.action === 'function') {
@@ -1737,7 +1748,8 @@ BlockEditorMorph.prototype.accept = function () {
     this.close();
 };
 
-BlockEditorMorph.prototype.cancel = function () {
+BlockEditorMorph.prototype.cancel = function (origin) {
+    if (origin instanceof CursorMorph) {return; }
     //this.refreshAllBlockInstances();
     this.close();
 };
@@ -1862,6 +1874,9 @@ BlockEditorMorph.prototype.context = function (prototypeHat) {
     if (topBlock === null) {
         return null;
     }
+    topBlock.allChildren().forEach(function (c) {
+        if (c instanceof BlockMorph) {c.cachedInputs = null; }
+    });
     stackFrame = Process.prototype.reify.call(
         null,
         topBlock,
@@ -1953,8 +1968,13 @@ PrototypeHatBlockMorph.prototype.init = function (definition) {
 
 PrototypeHatBlockMorph.prototype.mouseClickLeft = function () {
     // relay the mouse click to my prototype block to
-    // pop-up a Block Dialog
+    // pop-up a Block Dialog, unless the shift key
+    // is pressed, in which case initiate keyboard
+    // editing support
 
+    if (this.world().currentKey === 16) { // shift-clicked
+        return this.focus();
+    }
     this.children[0].mouseClickLeft();
 };
 
@@ -2036,7 +2056,13 @@ BlockLabelFragment.prototype.defTemplateSpecFragment = function () {
         )) {
         suff = ' \u03BB';
     } else if (this.defaultValue) {
-        suff = ' = ' + this.defaultValue.toString();
+        if (this.type === '%n') {
+            suff = ' # = ' + this.defaultValue.toString();
+        } else { // 'any' or 'text'
+            suff = ' = ' + this.defaultValue.toString();
+        }
+    } else if (this.type === '%n') {
+        suff = ' #';
     }
     return this.labelString + suff;
 };
@@ -2971,7 +2997,7 @@ InputSlotDialogMorph.prototype.editSlotOptions = function () {
     new DialogBoxMorph(
         myself,
         function (options) {
-            myself.fragment.options = options;
+            myself.fragment.options = options.trim();
         },
         myself
     ).promptCode(
@@ -3278,15 +3304,17 @@ BlockExportDialogMorph.prototype.selectNone = function () {
 // BlockExportDialogMorph ops
 
 BlockExportDialogMorph.prototype.exportBlocks = function () {
-    var str = this.serializer.serialize(this.blocks);
+    var str = encodeURIComponent(
+        this.serializer.serialize(this.blocks)
+    );
     if (this.blocks.length > 0) {
-        window.open(encodeURI('data:text/xml,<blocks app="'
+        window.open('data:text/xml,<blocks app="'
             + this.serializer.app
             + '" version="'
             + this.serializer.version
             + '">'
             + str
-            + '</blocks>'));
+            + '</blocks>');
     } else {
         new DialogBoxMorph().inform(
             'Export blocks',
