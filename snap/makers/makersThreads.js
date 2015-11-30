@@ -261,6 +261,29 @@ Process.prototype.makersSetPWM = function(pin,value) {
 		throw new Error(localize("Arduino not connected"))
 	}
 };
+Process.prototype.makersSetPWMV2 = function(pin,value) {
+    var sprite = this.homeContext.receiver;
+    var val = value*255/100.0
+
+	if (sprite.makersIsBoardConnected()) {
+        var pinValue = 10;
+        switch(pin){
+            case 'D0':
+                pinValue = 10;
+                break;
+            case 'D1':
+                pinValue = 11;
+                break;
+            default:
+                throw new Error(localize("Invalid pin \n should be D0 or D1"));
+                break;
+        }
+        this.setPinMode(pinValue,['PWM']);
+		this.pwmWrite(pinValue,val);
+	} else {
+		throw new Error(localize("Arduino not connected"))
+	}
+};
 
 
 Process.prototype.makersReadSensor = function(pin)
@@ -288,7 +311,7 @@ Process.prototype.makersReadSensor = function(pin)
 		        return this.reportAnalogReading(5);
 		        break;
 		    default:
-		    	throw new Error(localize("Invalid pin "+pin+"\n(should be A0, A1, A2, A3, A4 or A5"));
+		    	throw new Error(localize("Invalid pin \n should be A0, A1, A2, A3, A4 or A5"));
 		        break;
 		}
 	} else {
@@ -324,15 +347,38 @@ Process.prototype.makersReportDigitalPin = function(pin)
 		        return this.reportDigitalReading(12);
 		        break;
 		    default:
-		    	throw new Error(localize("Invalid pin "+pin+"\n(should be 3, 8, 9, 10, 11 or 12"));
+		    	throw new Error(localize("Invalid pin \n should be 3, 8, 9, 10, 11 or 12"));
 		        break;
 		}
 	} else {
 		throw new Error(localize("Arduino not connected"))
 	}
+}
 
+Process.prototype.makersReportDigitalPinV2 = function(pin)
+{
+    var sprite = this.homeContext.receiver;
 
-};
+	if (sprite.makersIsBoardConnected()) {
+		switch(pin) {
+                
+		    case 'D0':
+		        return this.reportDigitalReading(10);
+		        break;
+		    case 'D1':
+		        return this.reportDigitalReading(11);
+		        break;
+		    case 'D2':
+		        return this.reportDigitalReading(12);
+		        break;
+		    default:
+		    	throw new Error(localize("Invalid pin \n should be D0, D1 or D2"));
+		        break;
+		}
+	} else {
+		throw new Error(localize("Arduino not connected"))
+	}
+}
 
 Process.prototype.makersServoWrite = function(pin,value)
 {

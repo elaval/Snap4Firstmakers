@@ -1,0 +1,2 @@
+blink	Blink (Turn on/off led)
+test	Test FirstMakers Board

@@ -29,12 +29,11 @@
         "show_in_taskbar": true, 
         "mac_icon": "", 
         "transparent": false, 
-        "toolbar": true, 
+        "toolbar": false, 
         "icon": ""
     }, 
     "dependencies": {
-        "serialport": ">=0.7.5", 
-        "firmata": "~0.3.3"
+  
     }, 
     "snapshot": "", 
     "version": "1.0.0", 

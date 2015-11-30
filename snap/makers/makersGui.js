@@ -263,3 +263,86 @@ IDE_Morph.prototype.init = function (isAutoFill) {
 }
 
 
+IDE_Morph.prototype.snapMenu = function () {
+    var menu,
+    world = this.world();
+
+    menu = new MenuMorph(this);
+    menu.addItem('About Snap!...', 'aboutSnap');
+    menu.addItem('About FirstMakers...', 'aboutFirstMakers');
+    menu.addLine();
+
+    menu.addItem(
+        'FirstMakers website',
+        function () {
+            window.open('http://www.firstmakers.com', 'FirstMakers');
+        }
+    );
+    menu.addItem(
+        'Download source code',
+        function () {
+            window.open('https://github.com/elaval/Snap4Firstmakers', 'FirstMakers');
+        }
+    );
+
+
+    if (world.isDevMode) {
+        menu.addLine();
+        menu.addItem(
+            'Switch back to user mode',
+            'switchToUserMode',
+            'disable deep-Morphic\ncontext menus'
+            + '\nand show user-friendly ones',
+            new Color(0, 100, 0)
+            );
+    } else if (world.currentKey === 16) { // shift-click
+        menu.addLine();
+        menu.addItem(
+            'Switch to dev mode',
+            'switchToDevMode',
+            'enable Morphic\ncontext menus\nand inspectors,'
+            + '\nnot user-friendly!',
+            new Color(100, 0, 0)
+        );
+    }
+    menu.popup(world, this.logo.bottomLeft());
+};
+IDE_Morph.prototype.aboutFirstMakers = function () {
+    var dlg, aboutTxt, creditsTxt, translations,
+    module, aboutBtn, creditsBtn,
+    world = this.world();
+
+    aboutTxt = localize('Snap4Firstmakers! 1.0.1-beta\n\n Is a modification of Snap4Arduino Software for controlling FirstMakers Board');
+
+    creditsTxt = localize('Contributors\n\nErnesto Laval: MacOSX version, architectural decisions,\nseveral features and bugfixes, Spanish translation\nJose Saavedra: Hardware Desing\nEdison Delgado: Software engineering\n');
+
+    dlg = new DialogBoxMorph();
+    dlg.inform('About Snap4Firstmakers', aboutTxt, world);
+    creditsBtn = dlg.addButton(
+        function () {
+            dlg.body.text = creditsTxt;
+            dlg.body.drawNew();
+            aboutBtn.show();
+            creditsBtn.hide();
+            dlg.fixLayout();
+            dlg.drawNew();
+            dlg.setCenter(world.center());
+        },
+        'Contributions...'
+    );
+    aboutBtn = dlg.addButton(
+        function () {
+            dlg.body.text = aboutTxt;
+            dlg.body.drawNew();
+            aboutBtn.hide();
+            creditsBtn.show();
+            dlg.fixLayout();
+            dlg.drawNew();
+            dlg.setCenter(world.center());
+        },
+        'About Snap4FirstMakers...'
+    );
+    aboutBtn.hide();
+    dlg.fixLayout();
+    dlg.drawNew();
+};

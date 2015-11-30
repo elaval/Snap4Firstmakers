@@ -140,6 +140,17 @@ function overridenLabelPart(spec) {
                 }
             );
             part.setContents('D0');
+            break; 
+         case '%pwmPinV2':    
+            part = new InputSlotMorph(
+                null,
+                true,
+                {
+                    'D0':'D0',
+                    'D1':'D1' 
+                }
+            );
+            part.setContents('D0');
             break;         
 
         default:

@@ -187,6 +187,12 @@ SpriteMorph.prototype.initBlocks = function () {
         category: 'makers',
         spec: 'set pwm %pwmPin to %pwmValue'
     };
+    SpriteMorph.prototype.blocks.makersSetPWMV2 =
+    {
+        type: 'command',
+        category: 'makers',
+        spec: 'set pwm %pwmPinV2 to %pwmValue'
+    };
     
     SpriteMorph.prototype.blocks.makersReadSensor =
     {
@@ -200,6 +206,13 @@ SpriteMorph.prototype.initBlocks = function () {
         type: 'reporter',
         category: 'makers',
         spec: 'read digital %digitalPin'
+    };
+    
+    SpriteMorph.prototype.blocks.makersReportDigitalPinV2 =
+    {
+        type: 'reporter',
+        category: 'makers',
+        spec: 'read digital %actuatorPinV2'
     };
     
     SpriteMorph.prototype.blocks.makersServoWrite =
@@ -305,6 +318,13 @@ SpriteMorph.prototype.initBlocks = function () {
             category: 'internet',
             spec: 'thingspeak set value %s at field %s in channel %s with key %s',
             defaults: ['0','1']
+    };
+    
+    SpriteMorph.prototype.blocks.gotoInitial = 
+    {
+            type: 'command',
+            category: 'motion',
+            spec:'Go to initial position'   
     };
 
 
@@ -602,10 +622,16 @@ function overridenBlockTemplates(category) {
         }
 
     };
+    /**reset sprite to initial position 0,0*/
+    SpriteMorph.prototype.gotoInitial= function(){
+        this.gotoXY(0,0,true);
+        
+    }
 
 
     if (category === 'motion') {
         if (world.isMakersBasicMode) {
+            blocks.push(block('gotoInitial'));
             blocks.push(block('forward'));
             blocks.push(block('turn'));
             blocks.push(block('turnLeft'));
@@ -617,6 +643,7 @@ function overridenBlockTemplates(category) {
             blocks.push(block('changeYPosition'));
             blocks.push(block('setYPosition'));
         } else  {
+            blocks.push(block('gotoInitial'));
             blocks.push(block('forward'));
             blocks.push(block('turn'));
             blocks.push(block('turnLeft'));
@@ -1229,17 +1256,20 @@ function overridenBlockTemplates(category) {
         blocks.push(blockBySelector('makersReadSensor'));
         if(world.isMakersV2){
             //bloques makers para la tarjeta version 2 
-            blocks.push(blockBySelector('makersServoWriteV2'));
-            blocks.push(blockBySelector('makersMotor'));
+            blocks.push(blockBySelector('makersReportDigitalPinV2'));
+            blocks.push(blockBySelector('makersSetPWMV2'));
             blocks.push(blockBySelector('outputDigitalOn'));
             blocks.push(blockBySelector('outputDigitalOff'));
+            blocks.push('-');
+            blocks.push(blockBySelector('makersServoWriteV2'));
+            blocks.push(blockBySelector('makersMotor'));
             
         }else{
-            blocks.push(blockBySelector('makersTurnOnActuator'));
-            blocks.push(blockBySelector('makersTurnOffActuator'));
-            blocks.push(blockBySelector('makersSetPWM'));
-            blocks.push('-');
+            
             blocks.push(blockBySelector('makersReportDigitalPin'));
+            blocks.push(blockBySelector('makersTurnOnActuator'));
+            blocks.push(blockBySelector('makersSetPWM'));
+            blocks.push(blockBySelector('makersTurnOffActuator'));
             blocks.push('-');
             blocks.push(blockBySelector('makersServoWrite'));
         }

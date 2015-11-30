@@ -223,9 +223,27 @@ makersTempDict = {
     'uncheck to work with newer versions of the board':'deshabibitar para las nuevas versiones de la tarjeta',
     'check to work with version 2.0 of the board':'habilitar para trabajar con la versión 2.0',
     'servo to %servoValue':'servo a %servoValue',
-    'motor spin %motorSpinValue speed %motorSpeedValue': 'motor girar %motorSpinValue velocidad %motorSpeedValue',
+    'motor spin %motorSpinValue speed %motorSpeedValue': 'girar motor %motorSpinValue velocidad %motorSpeedValue',
     'turn on pin %actuatorPinV2':'encender pin %actuatorPinV2',
-    'turn off pin %actuatorPinV2':'apagar pin %actuatorPinV2'
+    'turn off pin %actuatorPinV2':'apagar pin %actuatorPinV2',
+    'Invalid pin \n should be D0, D1 or D2':'Pin Inválido \n seleccione D0, D1 o D2',
+    'Invalid pin \n should be D0 or D1':'Pin Inválido \n seleccione D0 o D1',
+    'Invalid pin \n should be 3, 8, 9, 10, 11 or 12':'Pin inválido \n seleccione 3, 8, 9, 10, 11 o 12',
+    'Invalid pin \n should be A0, A1, A2, A3, A4 or A5':'Pin inválido \n seleccione A0, A1, A2, A3, A4 o A5',
+    'Go to initial position':'Ir a la posición inicial',
+    'About Snap4Firstmakers':'Acerca de Snap4Firstmakers',
+    'FirstMakers website':'Sitio Web FirstMakers',
+    'Download source code':'Descargar código fuente',
+    'About FirstMakers...':'Acerca de FirstMakers...',
+    'About Snap4FirstMakers...':'Acerca de Snap4FirsMakers',
+    'Contributions...':'Colaboradores...',
+    'Contributors':'Colaboradores',
+    'Snap4Firstmakers! 1.0.1-beta\n\n Is a modification of Snap4Arduino Software for controlling FirstMakers Board':
+    'Snap4Firstmakers! 1.0.1-beta\n\n Es una modificación de Snap4Arduino para controlar la tarjeta FirstMakers',
+    'Contributors\n\nErnesto Laval: MacOSX version, architectural decisions,\nseveral features and bugfixes, Spanish translation\nJose Saavedra: Hardware Desing\nEdison Delgado: Software engineering\n':'Colaboradores\n\nErnesto Laval: Version Mac OSX, Arquitectura,\nvarias características y correcciones de errores, Traducción Español\nJose Saavedra: Diseño de Hardware\nEdison Delgado: Ingeniero de Sofware\n',
+    'set pwm %pwmPinV2 to %pwmValue':'fijar pwm %pwmPinV2 en %pwmValue',
+    'read digital %actuatorPinV2':'leer pin digital %actuatorPinV2',
+    'FirstMakers v2.0 compatible':'FirstMakers compatible v2.0'
 
 };
 

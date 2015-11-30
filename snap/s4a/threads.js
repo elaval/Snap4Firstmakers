@@ -100,11 +100,11 @@ Process.prototype.reportDigitalReading = function (pin) {
 
     if (sprite.arduino.isBoardReady()) {
         var board = sprite.arduino.board; 
-        //console.log('board '+ board.pins[pin].mode);
+
         if (board.pins[pin].mode != board.MODES.INPUT) {
             board.pinMode(pin, board.MODES.INPUT);
+            board.digitalRead(pin, nop);
         }
-        //console.log('pin value '+ board.pins[pin].value);
         return board.pins[pin].value == 1;
     } else {
         throw new Error(localize("Arduino not connected"));		
