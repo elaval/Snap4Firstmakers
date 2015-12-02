@@ -364,7 +364,7 @@ function overridenBlockTemplates(category) {
             return null;
         }
         var info = SpriteMorph.prototype.blocks[selector];
-        return new ToggleMorph(
+        var toggle = new ToggleMorph(
             'checkbox',
             this,
             function () {
@@ -380,6 +380,7 @@ function overridenBlockTemplates(category) {
             },
             null
         );
+       return toggle;
     }
 
     function variableWatcherToggle(varName) {
@@ -429,8 +430,6 @@ function overridenBlockTemplates(category) {
             },
             'Disconnect Arduino'
     );
-
-
 
     /**
      * Authorize twitter account (requests a PIN through a browser window)
@@ -625,6 +624,7 @@ function overridenBlockTemplates(category) {
     /**reset sprite to initial position 0,0*/
     SpriteMorph.prototype.gotoInitial= function(){
         this.gotoXY(0,0,true);
+        this.setHeading(90);
         
     }
 

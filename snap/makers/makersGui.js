@@ -124,21 +124,8 @@ IDE_Morph.prototype.settingsMenu = function () {
         },
         world.isMakersBasicMode,
         'uncheck to advanced mode (more block options)',
-        'check to enable basic mode (reduced blockoptins)'
+        'check to enable basic mode (reduced block options)'
     );
-    /*
-    addPreference(
-        'FirstMakers v1.0 compatible',
-        function () {
-            world.isMakersV1 = !world.isMakersV1; 
-            myself.saveSetting('makersV1', world.isMakersV1);
-            myself.refreshIDE();
-        },
-        world.isMakersV1,
-        'uncheck to work with newer versions of the board',
-        'check to work with version 1.0 of the board'
-    );
-    */
     addPreference(
         'FirstMakers v2.0 compatible',
         function () {
@@ -164,7 +151,8 @@ IDE_Morph.prototype.applySavedSettings = function() {
 
     var makersBasicMode = this.getSetting('makersBasicMode'),
     //makersV1 = this.getSetting('makersV1'),
-    makersV2 = this.getSetting('makersV2');
+    makersV2 = this.getSetting('makersV2'),
+    language = this.getSetting('language');
 
     // localstorage (and getSetting) gets boolean values as string, so a "false" value is not false.
     // we use the trick JSON.parse(this.getSetting["x"]) to convet "false" into false and "true" into true
@@ -173,23 +161,21 @@ IDE_Morph.prototype.applySavedSettings = function() {
     } else if (typeof makersBasicMode == "boolean") {
         world.isMakersBasicMode = makersBasicMode
     } else {
-        world.isMakersBasicMode = true;  //default
+        world.isMakersBasicMode = false;  //default 
     }
-
-    /*if (typeof makersV1 !== "undefined" && makersV1) {
-        world.isMakersV1 = makersV1 == "true" ? true : false;
-    } else if (typeof makersV1 == "boolean") {
-        world.isMakersV1 = isMakersV1;
-    } else {
-        world.isMakersV1 = false; // default
-    }*/
-    
     if (typeof makersV2 !== "undefined" && makersV2) {
         world.isMakersV2 = makersV2 == "true" ? true : false;
     } else if (typeof makersV2 == "boolean") {
         world.isMakersV2 = isMakersV2;
     } else {
         world.isMakersV2 = false; // default
+    }
+    
+    //Init in spanish
+    if (language && language !== 'es') {
+        this.userLanguage = language;
+    } else {
+        this.userLanguage = 'es'//default;
     }
 }
 
@@ -346,3 +332,644 @@ IDE_Morph.prototype.aboutFirstMakers = function () {
     dlg.fixLayout();
     dlg.drawNew();
 };
+IDE_Morph.prototype.cloudMenu = function () {
+    return;
+};
+IDE_Morph.prototype.createControlBar = function () {
+    // assumes the logo has already been created
+    var padding = 5,
+        button,
+        stopButton,
+        pauseButton,
+        startButton,
+        projectButton,
+        settingsButton,
+        stageSizeButton,
+        appModeButton,
+        /*cloudButton,*/
+        x,
+        colors = [
+            this.groupColor,
+            this.frameColor.darker(50),
+            this.frameColor.darker(50)
+        ],
+        myself = this;
+
+    if (this.controlBar) {
+        this.controlBar.destroy();
+    }
+
+    this.controlBar = new Morph();
+    this.controlBar.color = this.frameColor;
+    this.controlBar.setHeight(this.logo.height()); // height is fixed
+    this.controlBar.mouseClickLeft = function () {
+        this.world().fillPage();
+    };
+    this.add(this.controlBar);
+
+    //smallStageButton
+    button = new ToggleButtonMorph(
+        null, //colors,
+        myself, // the IDE is the target
+        'toggleStageSize',
+        [
+            new SymbolMorph('smallStage', 14),
+            new SymbolMorph('normalStage', 14)
+        ],
+        function () {  // query
+            return myself.isSmallStage;
+        }
+    );
+
+    button.corner = 12;
+    button.color = colors[0];
+    button.highlightColor = colors[1];
+    button.pressColor = colors[2];
+    button.labelMinExtent = new Point(36, 18);
+    button.padding = 0;
+    button.labelShadowOffset = new Point(-1, -1);
+    button.labelShadowColor = colors[1];
+    button.labelColor = this.buttonLabelColor;
+    button.contrast = this.buttonContrast;
+    button.drawNew();
+    // button.hint = 'stage size\nsmall & normal';
+    button.fixLayout();
+    button.refresh();
+    stageSizeButton = button;
+    this.controlBar.add(stageSizeButton);
+    this.controlBar.stageSizeButton = button; // for refreshing
+
+    //appModeButton
+    button = new ToggleButtonMorph(
+        null, //colors,
+        myself, // the IDE is the target
+        'toggleAppMode',
+        [
+            new SymbolMorph('fullScreen', 14),
+            new SymbolMorph('normalScreen', 14)
+        ],
+        function () {  // query
+            return myself.isAppMode;
+        }
+    );
+
+    button.corner = 12;
+    button.color = colors[0];
+    button.highlightColor = colors[1];
+    button.pressColor = colors[2];
+    button.labelMinExtent = new Point(36, 18);
+    button.padding = 0;
+    button.labelShadowOffset = new Point(-1, -1);
+    button.labelShadowColor = colors[1];
+    button.labelColor = this.buttonLabelColor;
+    button.contrast = this.buttonContrast;
+    button.drawNew();
+    // button.hint = 'app & edit\nmodes';
+    button.fixLayout();
+    button.refresh();
+    appModeButton = button;
+    this.controlBar.add(appModeButton);
+    this.controlBar.appModeButton = appModeButton; // for refreshing
+
+    // stopButton
+    button = new PushButtonMorph(
+        this,
+        'stopAllScripts',
+        new SymbolMorph('octagon', 14)
+    );
+    button.corner = 12;
+    button.color = colors[0];
+    button.highlightColor = colors[1];
+    button.pressColor = colors[2];
+    button.labelMinExtent = new Point(36, 18);
+    button.padding = 0;
+    button.labelShadowOffset = new Point(-1, -1);
+    button.labelShadowColor = colors[1];
+    button.labelColor = new Color(200, 0, 0);
+    button.contrast = this.buttonContrast;
+    button.drawNew();
+    // button.hint = 'stop\nevery-\nthing';
+    button.fixLayout();
+    stopButton = button;
+    this.controlBar.add(stopButton);
+
+    //pauseButton
+    button = new ToggleButtonMorph(
+        null, //colors,
+        myself, // the IDE is the target
+        'togglePauseResume',
+        [
+            new SymbolMorph('pause', 12),
+            new SymbolMorph('pointRight', 14)
+        ],
+        function () {  // query
+            return myself.isPaused();
+        }
+    );
+
+    button.corner = 12;
+    button.color = colors[0];
+    button.highlightColor = colors[1];
+    button.pressColor = colors[2];
+    button.labelMinExtent = new Point(36, 18);
+    button.padding = 0;
+    button.labelShadowOffset = new Point(-1, -1);
+    button.labelShadowColor = colors[1];
+    button.labelColor = new Color(255, 220, 0);
+    button.contrast = this.buttonContrast;
+    button.drawNew();
+    // button.hint = 'pause/resume\nall scripts';
+    button.fixLayout();
+    button.refresh();
+    pauseButton = button;
+    this.controlBar.add(pauseButton);
+    this.controlBar.pauseButton = pauseButton; // for refreshing
+
+    // startButton
+    button = new PushButtonMorph(
+        this,
+        'pressStart',
+        new SymbolMorph('flag', 14)
+    );
+    button.corner = 12;
+    button.color = colors[0];
+    button.highlightColor = colors[1];
+    button.pressColor = colors[2];
+    button.labelMinExtent = new Point(36, 18);
+    button.padding = 0;
+    button.labelShadowOffset = new Point(-1, -1);
+    button.labelShadowColor = colors[1];
+    button.labelColor = new Color(0, 200, 0);
+    button.contrast = this.buttonContrast;
+    button.drawNew();
+    // button.hint = 'start green\nflag scripts';
+    button.fixLayout();
+    startButton = button;
+    this.controlBar.add(startButton);
+    this.controlBar.startButton = startButton;
+
+    // projectButton
+    button = new PushButtonMorph(
+        this,
+        'projectMenu',
+        new SymbolMorph('file', 14)
+        //'\u270E'
+    );
+    button.corner = 12;
+    button.color = colors[0];
+    button.highlightColor = colors[1];
+    button.pressColor = colors[2];
+    button.labelMinExtent = new Point(36, 18);
+    button.padding = 0;
+    button.labelShadowOffset = new Point(-1, -1);
+    button.labelShadowColor = colors[1];
+    button.labelColor = this.buttonLabelColor;
+    button.contrast = this.buttonContrast;
+    button.drawNew();
+    // button.hint = 'open, save, & annotate project';
+    button.fixLayout();
+    projectButton = button;
+    this.controlBar.add(projectButton);
+    this.controlBar.projectButton = projectButton; // for menu positioning
+
+    // settingsButton
+    button = new PushButtonMorph(
+        this,
+        'settingsMenu',
+        new SymbolMorph('gears', 14)
+        //'\u2699'
+    );
+    button.corner = 12;
+    button.color = colors[0];
+    button.highlightColor = colors[1];
+    button.pressColor = colors[2];
+    button.labelMinExtent = new Point(36, 18);
+    button.padding = 0;
+    button.labelShadowOffset = new Point(-1, -1);
+    button.labelShadowColor = colors[1];
+    button.labelColor = this.buttonLabelColor;
+    button.contrast = this.buttonContrast;
+    button.drawNew();
+    // button.hint = 'edit settings';
+    button.fixLayout();
+    settingsButton = button;
+    this.controlBar.add(settingsButton);
+    this.controlBar.settingsButton = settingsButton; // for menu positioning
+
+    // cloudButton
+    /*button = new PushButtonMorph(
+        this,
+        'cloudMenu',
+        new SymbolMorph('cloud', 11)
+    );
+    button.corner = 12;
+    button.color = colors[0];
+    button.highlightColor = colors[1];
+    button.pressColor = colors[2];
+    button.labelMinExtent = new Point(36, 18);
+    button.padding = 0;
+    button.labelShadowOffset = new Point(-1, -1);
+    button.labelShadowColor = colors[1];
+    button.labelColor = this.buttonLabelColor;
+    button.contrast = this.buttonContrast;
+    button.drawNew();
+    // button.hint = 'cloud operations';
+    button.fixLayout();
+    cloudButton = button;
+    this.controlBar.add(cloudButton);
+    this.controlBar.cloudButton = cloudButton; // for menu positioning*/
+
+    this.controlBar.fixLayout = function () {
+        x = this.right() - padding;
+        [stopButton, pauseButton, startButton].forEach(
+            function (button) {
+                button.setCenter(myself.controlBar.center());
+                button.setRight(x);
+                x -= button.width();
+                x -= padding;
+            }
+        );
+
+        x = Math.min(
+            startButton.left() - (3 * padding + 2 * stageSizeButton.width()),
+            myself.right() - StageMorph.prototype.dimensions.x *
+                (myself.isSmallStage ? myself.stageRatio : 1)
+        );
+        [stageSizeButton, appModeButton].forEach(
+            function (button) {
+                x += padding;
+                button.setCenter(myself.controlBar.center());
+                button.setLeft(x);
+                x += button.width();
+            }
+        );
+
+        settingsButton.setCenter(myself.controlBar.center());
+        settingsButton.setLeft(this.left());
+
+       /* cloudButton.setCenter(myself.controlBar.center());
+        cloudButton.setRight(settingsButton.left() - padding);*/
+
+        projectButton.setCenter(myself.controlBar.center());
+        projectButton.setRight(settingsButton.left() - padding);
+
+        this.updateLabel();
+    };
+
+    this.controlBar.updateLabel = function () {
+        var suffix = myself.world().isDevMode ?
+                ' - ' + localize('development mode') : '';
+
+        if (this.label) {
+            this.label.destroy();
+        }
+        if (myself.isAppMode) {
+            return;
+        }
+
+        this.label = new StringMorph(
+            (myself.projectName || localize('untitled')) + suffix,
+            14,
+            'sans-serif',
+            true,
+            false,
+            false,
+            MorphicPreferences.isFlat ? null : new Point(2, 1),
+            myself.frameColor.darker(myself.buttonContrast)
+        );
+        this.label.color = myself.buttonLabelColor;
+        this.label.drawNew();
+        this.add(this.label);
+        this.label.setCenter(this.center());
+        this.label.setLeft(this.settingsButton.right() + padding);
+    };
+};
+IDE_Morph.prototype.toggleAppMode = function (appMode) {
+    var world = this.world(),
+        elements = [
+            this.logo,
+            //this.controlBar.cloudButton,
+            this.controlBar.projectButton,
+            this.controlBar.settingsButton,
+            this.controlBar.stageSizeButton,
+            this.stageHandle,
+            this.corral,
+            this.corralBar,
+            this.spriteEditor,
+            this.spriteBar,
+            this.palette,
+            this.categories
+        ];
+
+    this.isAppMode = isNil(appMode) ? !this.isAppMode : appMode;
+
+    Morph.prototype.trackChanges = false;
+    if (this.isAppMode) {
+        this.setColor(this.appModeColor);
+        this.controlBar.setColor(this.color);
+        this.controlBar.appModeButton.refresh();
+        elements.forEach(function (e) {
+            e.hide();
+        });
+        world.children.forEach(function (morph) {
+            if (morph instanceof DialogBoxMorph) {
+                morph.hide();
+            }
+        });
+        if (world.keyboardReceiver instanceof ScriptFocusMorph) {
+            world.keyboardReceiver.stopEditing();
+        }
+    } else {
+        this.setColor(this.backgroundColor);
+        this.controlBar.setColor(this.frameColor);
+        elements.forEach(function (e) {
+            e.show();
+        });
+        this.stage.setScale(1);
+        // show all hidden dialogs
+        world.children.forEach(function (morph) {
+            if (morph instanceof DialogBoxMorph) {
+                morph.show();
+            }
+        });
+        // prevent scrollbars from showing when morph appears
+        world.allChildren().filter(function (c) {
+            return c instanceof ScrollFrameMorph;
+        }).forEach(function (s) {
+            s.adjustScrollBars();
+        });
+        // prevent rotation and draggability controls from
+        // showing for the stage
+        if (this.currentSprite === this.stage) {
+            this.spriteBar.children.forEach(function (child) {
+                if (child instanceof PushButtonMorph) {
+                    child.hide();
+                }
+            });
+        }
+    }
+    this.setExtent(this.world().extent()); // resume trackChanges
+};
+//
+IDE_Morph.prototype.projectMenu = function () {
+    var menu,
+        myself = this,
+        world = this.world(),
+        pos = this.controlBar.projectButton.bottomLeft(),
+        graphicsName = this.currentSprite instanceof SpriteMorph ?
+                'Costumes' : 'Backgrounds',
+        shiftClicked = (world.currentKey === 16);
+
+    // Utility for creating Costumes, etc menus.
+    // loadFunction takes in two parameters: a file URL, and a canonical name
+    function createMediaMenu(mediaType, loadFunction) {
+        return function () {
+            var names = this.getMediaList(mediaType),
+                mediaMenu = new MenuMorph(
+                    myself,
+                    localize('Import') + ' ' + localize(mediaType)
+                );
+
+            names.forEach(function (item) {
+                mediaMenu.addItem(
+                    item.name,
+                    function () {loadFunction(item.file, item.name); },
+                    item.help
+                );
+            });
+            mediaMenu.popup(world, pos);
+        };
+    }
+
+    menu = new MenuMorph(this);
+    menu.addItem('Project notes...', 'editProjectNotes');
+    menu.addLine();
+    menu.addItem('New', 'createNewProject',localize('New empty project'));
+    //menu.addItem('Open...', 'openProjectsBrowser');
+    //menu.addItem('Save', "save");
+    if (shiftClicked) {
+        menu.addItem(
+            'Save to disk',
+            'saveProjectToDisk',
+            'store this project\nin the downloads folder\n'
+                + '(in supporting browsers)',
+            new Color(100, 0, 0)
+        );
+    }
+    //menu.addItem('Save As...', 'saveProjectsBrowser');
+    //menu.addLine();
+    menu.addItem(
+        'Open...',
+        function () {
+            var inp = document.createElement('input');
+            if (myself.filePicker) {
+                document.body.removeChild(myself.filePicker);
+                myself.filePicker = null;
+            }
+            inp.type = 'file';
+            inp.style.color = "transparent";
+            inp.style.backgroundColor = "transparent";
+            inp.style.border = "none";
+            inp.style.outline = "none";
+            inp.style.position = "absolute";
+            inp.style.top = "0px";
+            inp.style.left = "0px";
+            inp.style.width = "0px";
+            inp.style.height = "0px";
+            inp.addEventListener(
+                "change",
+                function () {
+                    document.body.removeChild(inp);
+                    myself.filePicker = null;
+                    world.hand.processDrop(inp.files);
+                },
+                false
+            );
+            document.body.appendChild(inp);
+            myself.filePicker = inp;
+            inp.click();
+        },
+        localize('open a project') // looks up the actual text in the translator
+    );
+
+    menu.addItem(
+        shiftClicked ?
+                'Save project as plain text...' : 'Save',
+        function () {
+            if (myself.projectName) {
+                myself.exportProject(myself.projectName, shiftClicked);
+            } else {
+                myself.prompt('Save Project As...', function (name) {
+                    myself.exportProject(name);
+                }, null, 'exportProject');
+            }
+        },
+        localize('Save project as XML file'),
+        shiftClicked ? new Color(100, 0, 0) : null
+    );
+
+    if (this.stage.globalBlocks.length) {
+        menu.addItem(
+            'Export blocks...',
+            function () {myself.exportGlobalBlocks(); },
+            localize('show global custom block definitions as XML\nin a new browser window')
+        );
+        menu.addItem(
+            'Unused blocks...',
+            function () {myself.removeUnusedBlocks(); },
+            localize('find unused global custom blocks\nand remove their definitions')
+        );
+    }
+
+    /*.addItem(
+        'Export summary...',
+        function () {myself.exportProjectSummary(); },
+        'open a new browser browser window\n with a summary of this project'
+    );*/
+
+    if (shiftClicked) {
+        menu.addItem(
+            'Export summary with drop-shadows...',
+            function () {myself.exportProjectSummary(true); },
+            'open a new browser browser window' +
+                '\n with a summary of this project' +
+                '\nwith drop-shadows on all pictures.' +
+                '\nnot supported by all browsers',
+            new Color(100, 0, 0)
+        );
+        menu.addItem(
+            'Export all scripts as pic...',
+            function () {myself.exportScriptsPicture(); },
+            'show a picture of all scripts\nand block definitions',
+            new Color(100, 0, 0)
+        );
+    }
+
+    menu.addLine();
+    menu.addItem(
+        'Import tools',
+        function () {
+            myself.droppedText(
+                myself.getURL('tools.xml'),
+                'tools'
+            );
+        },
+        'load the official library of\npowerful blocks'
+    );
+    menu.addLine();
+   /* menu.addItem(
+        'Libraries...',
+        createMediaMenu(
+            'libraries',
+            function loadLib(file, name) {
+                var url = myself.resourceURL('libraries', file);
+                myself.droppedText(myself.getURL(url), name);
+            }
+        ),
+        'Select categories of additional blocks to add to this project.'
+    );*/
+
+    menu.addItem(
+        localize(graphicsName) + '...',
+        createMediaMenu(
+            graphicsName,
+            function loadCostume(file, name) {
+                var url = myself.resourceURL(graphicsName, file),
+                    img = new Image();
+                img.onload = function () {
+                    var canvas = newCanvas(new Point(img.width, img.height));
+                    canvas.getContext('2d').drawImage(img, 0, 0);
+                    myself.droppedImage(canvas, name);
+                };
+                img.src = url;
+            }
+        ),
+        localize('Select a costume from the media library')
+    );
+    menu.addItem(
+        localize('Sounds') + '...',
+        createMediaMenu(
+            'Sounds',
+            function loadSound(file, name) {
+                var url = myself.resourceURL('Sounds', file),
+                    audio = new Audio();
+                audio.src = url;
+                audio.load();
+                myself.droppedAudio(audio, name);
+            }
+        ),
+        localize('Select a sound from the media library')
+    );
+        menu.addLine();
+
+    menu.addItem(
+        'Load examples...',
+        function () {
+            var fs = require('fs');
+            //var startupProject = fs.readFileSync('./init.xml').toString();
+
+            // read a list of libraries from an external file,
+            var libMenu = new MenuMorph(this, 'Load example'),
+                libUrl = './examples/examples.txt';
+
+            function loadLib(name) {
+                var path = './examples/'
+                        + name
+                        + '.xml';
+                myself.droppedText(fs.readFileSync(path).toString(), name);
+            }
+
+            //fs.readFileSync('./init.xml').toString()
+            //myself.getURL(libUrl).split('\n').forEach(function (line) {
+            fs.readFileSync(libUrl).toString().split('\n').forEach(function (line) {
+                if (line.length > 0) {
+                    libMenu.addItem(
+                        line.substring(line.indexOf('\t') + 1),
+                        function () {
+                            loadLib(
+                                line.substring(0, line.indexOf('\t'))
+                            );
+                        }
+                    );
+                }
+            });
+
+            libMenu.popup(world, pos);
+        },
+        localize('Load FirstMakers examples')
+    );
+
+    menu.popup(world, pos);
+};
+
+/*IDE_Morph.prototype.exportProject = function (name, plain) {
+    var menu, str;
+    if (name) {
+        this.setProjectName(name);
+        if (Process.prototype.isCatchingErrors) {
+            try {
+                menu = this.showMessage(localize('Exporting'));
+                str = encodeURIComponent(
+                    this.serializer.serialize(this.stage)
+                );
+                this.setURL('#open:' + str);
+                window.open('data:text/'
+                    + (plain ? 'plain,' + str : 'xml,' + str));
+                menu.destroy();
+                this.showMessage(localize('Exported!'), 1);
+            } catch (err) {
+                this.showMessage('Export failed: ' + err);
+            }
+        } else {
+            menu = this.showMessage('Exporting');
+            str = encodeURIComponent(
+                this.serializer.serialize(this.stage)
+            );
+            this.setURL('#open:' + str);
+            window.open('data:text/'
+                + (plain ? 'plain,' + str : 'xml,' + str));
+            menu.destroy();
+            this.showMessage(localize('Exported!'), 1);
+        }
+    }
+};*/
