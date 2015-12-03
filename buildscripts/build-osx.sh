@@ -1,23 +1,23 @@
 #!/bin/sh
 cd ../release/osx
-rm -Rf FirstMakers.app
-rm -Rf FirstMakers_unzipped.app
-cp -R ../../releasecore/osx/FirstMakers.app ./FirstMakers.app
-cp -R ../../releasecore/osx/FirstMakers.app ./FirstMakers_unzipped.app
+rm -Rf Snap4FirstMakers.app
+rm -Rf Snap4FirstMakers_unzipped.app
+cp -R ../../releasecore/osx/Snap4FirstMakers.app ./Snap4FirstMakers_unzipped.app
+cp -R ../../releasecore/osx/Snap4FirstMakers.app ./Snap4FirstMakers.app
 cp -R ../../snap app
 cd app
 rm -Rf node_modules
 cp -R ../../../modules/osx/* .
 zip -r app.nw *
-mv app.nw ../FirstMakers.app/Contents/Resources
-cd ../FirstMakers_unzipped.app
+mv app.nw ../Snap4FirstMakers.app/Contents/Resources
+cd ../Snap4FirstMakers_unzipped.app
 rm -Rf ./Contents/Resources/app.nw
 mv ../app ./Contents/Resources/app.nw
 cd ..
-ln -sf FirstMakers_unzipped.app/Contents/Resources/app.nw app.nw
-sh ../../buildscripts/sign.sh FirstMakers.app
-rm -Rf ./FirstMakers/FirstMakers.app
-mv FirstMakers.app FirstMakers
+ln -sf Snap4FirstMakers_unzipped.app/Contents/Resources/app.nw app.nw
+sh ../../buildscripts/sign.sh Snap4FirstMakers.app
+#rm -Rf FirstMakers/FirstMakers.app
+#mv FirstMakers.app FirstMakers/
 
 
 #rm -f Snap4Arduino.dmg

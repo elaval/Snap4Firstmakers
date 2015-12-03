@@ -3,20 +3,17 @@
 #
 #security find-identity
 app="$1"
-identity="AC9A55993024B26438EDA978FD48FD603C476011"
+identity="DACAFF3AD78960F464DBCF4625D5F921FE90076D"
 
 echo "### signing frameworks"
 codesign --force --verify --verbose --sign "$identity" "$app/Contents/Frameworks/crash_inspector"
-codesign --force --verify --verbose --sign "$identity" "$app/Contents/Frameworks/node-webkit Framework.framework/node-webkit Framework.tmp"
-codesign --force --verify --verbose --sign "$identity" "$app/Contents/Frameworks/node-webkit Framework.framework/node-webkit Framework.TOC"
-codesign --force --verify --verbose --sign "$identity" "$app/Contents/Frameworks/node-webkit Framework.framework/"
-codesign --force --verify --verbose --sign "$identity" "$app/Contents/Frameworks/node-webkit Helper EH.app/"
-codesign --force --verify --verbose --sign "$identity" "$app/Contents/Frameworks/node-webkit Helper NP.app/"
-codesign --force --verify --verbose --sign "$identity" "$app/Contents/Frameworks/node-webkit Helper.app/"
-
+codesign --force --verify --verbose --sign "$identity" "$app/Contents/Frameworks/nwjs Framework.framework"
+codesign --force --verify --verbose --sign "$identity" "$app/Contents/Frameworks/nwjs Helper EH.app"
+codesign --force --verify --verbose --sign "$identity" "$app/Contents/Frameworks/nwjs Helper NP.app"
+codesign --force --verify --verbose --sign "$identity" "$app/Contents/Frameworks/nwjs Helper.app"
 echo "### signing app"
 codesign --force --verify --verbose --sign "$identity" "$app"
 
 echo "### verifying signature"
 codesign -vvv -d "$app"
-sudo spctl -a -vvvv "$app"
+#sudo spctl -a -vvvv "$app"
