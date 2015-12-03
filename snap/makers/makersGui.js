@@ -181,65 +181,6 @@ IDE_Morph.prototype.applySavedSettings = function() {
 
 
 
-// Modify settings menu to add basic/advanced mode for makers
-IDE_Morph.prototype.originalSnap4ArduinoProjectMenu = IDE_Morph.prototype.projectMenu;
-
-IDE_Morph.prototype.projectMenu = function () {
-    var menu,
-        stage = this.stage,
-        world = this.world(),
-        myself = this,
-        pos = this.controlBar.settingsButton.bottomLeft(),
-        shiftClicked = (world.currentKey === 16);
-
-
-    this.originalSnap4ArduinoProjectMenu();
-
-    menu = world.activeMenu;
-
-    menu.addLine();
-
-    menu.addItem(
-        'Load examples...',
-        function () {
-            var fs = require('fs');
-            //var startupProject = fs.readFileSync('./init.xml').toString();
-
-            // read a list of libraries from an external file,
-            var libMenu = new MenuMorph(this, 'Load example'),
-                libUrl = './examples/examples.txt';
-
-            function loadLib(name) {
-                var path = './examples/'
-                        + name
-                        + '.xml';
-                myself.droppedText(fs.readFileSync(path).toString(), name);
-            }
-
-            //fs.readFileSync('./init.xml').toString()
-            //myself.getURL(libUrl).split('\n').forEach(function (line) {
-            fs.readFileSync(libUrl).toString().split('\n').forEach(function (line) {
-                if (line.length > 0) {
-                    libMenu.addItem(
-                        line.substring(line.indexOf('\t') + 1),
-                        function () {
-                            loadLib(
-                                line.substring(0, line.indexOf('\t'))
-                            );
-                        }
-                    );
-                }
-            });
-
-            libMenu.popup(world, pos);
-        },
-        'Load FirstMakers examples.'
-    );
-
-    menu.popup(world, pos);
-};
-
-
 IDE_Morph.prototype.originalSnap4Arduinoinit =  IDE_Morph.prototype.init;
 
 IDE_Morph.prototype.init = function (isAutoFill) {
@@ -298,7 +239,7 @@ IDE_Morph.prototype.aboutFirstMakers = function () {
     module, aboutBtn, creditsBtn,
     world = this.world();
 
-    aboutTxt = localize('Snap4Firstmakers! 1.0.1-beta\n\n Is a modification of Snap4Arduino Software for controlling FirstMakers Board');
+    aboutTxt = localize('Snap4Firstmakers! 1.0.2-beta\n\n Is a modification of Snap4Arduino Software for controlling FirstMakers Board');
 
     creditsTxt = localize('Contributors\n\nErnesto Laval: MacOSX version, architectural decisions,\nseveral features and bugfixes, Spanish translation\nJose Saavedra: Hardware Desing\nEdison Delgado: Software engineering\n');
 
