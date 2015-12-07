@@ -686,19 +686,7 @@ IDE_Morph.prototype.projectMenu = function () {
     menu.addItem('Project notes...', 'editProjectNotes');
     menu.addLine();
     menu.addItem('New', 'createNewProject',localize('New empty project'));
-    //menu.addItem('Open...', 'openProjectsBrowser');
-    //menu.addItem('Save', "save");
-    if (shiftClicked) {
-        menu.addItem(
-            'Save to disk',
-            'saveProjectToDisk',
-            'store this project\nin the downloads folder\n'
-                + '(in supporting browsers)',
-            new Color(100, 0, 0)
-        );
-    }
-    //menu.addItem('Save As...', 'saveProjectsBrowser');
-    //menu.addLine();
+
     menu.addItem(
         'Open...',
         function () {
@@ -734,81 +722,15 @@ IDE_Morph.prototype.projectMenu = function () {
     );
 
     menu.addItem(
-        shiftClicked ?
-                'Save project as plain text...' : 'Save',
-        function () {
-            if (myself.projectName) {
-                myself.exportProject(myself.projectName, shiftClicked);
-            } else {
-                myself.prompt('Save Project As...', function (name) {
-                    myself.exportProject(name);
-                }, null, 'exportProject');
-            }
+        'Save',
+        function(){
+            this.saveFile();
         },
-        localize('Save project as XML file'),
-        shiftClicked ? new Color(100, 0, 0) : null
+        localize('Save project as XML file')
     );
 
-    if (this.stage.globalBlocks.length) {
-        menu.addItem(
-            'Export blocks...',
-            function () {myself.exportGlobalBlocks(); },
-            localize('show global custom block definitions as XML\nin a new browser window')
-        );
-        menu.addItem(
-            'Unused blocks...',
-            function () {myself.removeUnusedBlocks(); },
-            localize('find unused global custom blocks\nand remove their definitions')
-        );
-    }
-
-    /*.addItem(
-        'Export summary...',
-        function () {myself.exportProjectSummary(); },
-        'open a new browser browser window\n with a summary of this project'
-    );*/
-
-    if (shiftClicked) {
-        menu.addItem(
-            'Export summary with drop-shadows...',
-            function () {myself.exportProjectSummary(true); },
-            'open a new browser browser window' +
-                '\n with a summary of this project' +
-                '\nwith drop-shadows on all pictures.' +
-                '\nnot supported by all browsers',
-            new Color(100, 0, 0)
-        );
-        menu.addItem(
-            'Export all scripts as pic...',
-            function () {myself.exportScriptsPicture(); },
-            'show a picture of all scripts\nand block definitions',
-            new Color(100, 0, 0)
-        );
-    }
 
     menu.addLine();
-    menu.addItem(
-        'Import tools',
-        function () {
-            myself.droppedText(
-                myself.getURL('tools.xml'),
-                'tools'
-            );
-        },
-        'load the official library of\npowerful blocks'
-    );
-    menu.addLine();
-   /* menu.addItem(
-        'Libraries...',
-        createMediaMenu(
-            'libraries',
-            function loadLib(file, name) {
-                var url = myself.resourceURL('libraries', file);
-                myself.droppedText(myself.getURL(url), name);
-            }
-        ),
-        'Select categories of additional blocks to add to this project.'
-    );*/
 
     menu.addItem(
         localize(graphicsName) + '...',
@@ -883,34 +805,27 @@ IDE_Morph.prototype.projectMenu = function () {
     menu.popup(world, pos);
 };
 
-/*IDE_Morph.prototype.exportProject = function (name, plain) {
-    var menu, str;
-    if (name) {
-        this.setProjectName(name);
-        if (Process.prototype.isCatchingErrors) {
-            try {
-                menu = this.showMessage(localize('Exporting'));
-                str = encodeURIComponent(
-                    this.serializer.serialize(this.stage)
-                );
-                this.setURL('#open:' + str);
-                window.open('data:text/'
-                    + (plain ? 'plain,' + str : 'xml,' + str));
-                menu.destroy();
-                this.showMessage(localize('Exported!'), 1);
-            } catch (err) {
-                this.showMessage('Export failed: ' + err);
-            }
-        } else {
-            menu = this.showMessage('Exporting');
-            str = encodeURIComponent(
-                this.serializer.serialize(this.stage)
-            );
-            this.setURL('#open:' + str);
-            window.open('data:text/'
-                + (plain ? 'plain,' + str : 'xml,' + str));
-            menu.destroy();
-            this.showMessage(localize('Exported!'), 1);
-        }
-    }
-};*/
+IDE_Morph.prototype.saveFile = function(){
+    var myself = this;
+    var dialog = document.createElement('input');
+    dialog.type = 'file';
+    dialog.nwsaveas = this.projectName || '';
+    dialog.accept = '.XML';
+    dialog.addEventListener('change',function(evt){
+    fs = require('fs');
+    var path = dialog.value;
+    var data = myself.serializer.serialize(myself.stage);
+        console.log(data);
+    var regex = /.xml/i;    
+    if(!regex.test(path));
+        path = path+'.xml';
+    fs.writeFile(path, data, 'utf8',function(error){
+        if(error)
+            myself.showMessage(localize(error));
+        else
+            myself.showMessage(localize('Exported!'));
+        });
+        
+    });
+    dialog.click();
+}
