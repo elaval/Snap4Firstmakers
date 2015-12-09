@@ -276,7 +276,7 @@ makersTempDict = {
     'current %dates':'actual %dates',
     'Save Project As...':'Guardar proyecto como...',
     'Select a sound from the media library':'Elegir un sonido desde la biblioteca de medios',
-    'Select a costume from the media library':'Elegir un disfraz desde la bibliteca de medios',
+    'Select a costume from the media library':'Elegir un disfraz desde la biblioteca de medios',
     'find unused global custom blocks\nand remove their definitions':'',
     'show global custom block definitions as XML\nin a new browser window':'',
     'open a project':'Abre un proyecto',
@@ -303,7 +303,8 @@ makersTempDict = {
     'turbo mode?':'¿en modo turbo?',
     'set turbo mode to %b':'modo turbo para %b',
     '%att of %spr':'%att de %spr',
-    'Make a variable':'Crear una variable'
+    'Make a variable':'Crear una variable',
+    '':''
     
     
 };

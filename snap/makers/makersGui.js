@@ -497,29 +497,6 @@ IDE_Morph.prototype.createControlBar = function () {
     this.controlBar.add(settingsButton);
     this.controlBar.settingsButton = settingsButton; // for menu positioning
 
-    // cloudButton
-    /*button = new PushButtonMorph(
-        this,
-        'cloudMenu',
-        new SymbolMorph('cloud', 11)
-    );
-    button.corner = 12;
-    button.color = colors[0];
-    button.highlightColor = colors[1];
-    button.pressColor = colors[2];
-    button.labelMinExtent = new Point(36, 18);
-    button.padding = 0;
-    button.labelShadowOffset = new Point(-1, -1);
-    button.labelShadowColor = colors[1];
-    button.labelColor = this.buttonLabelColor;
-    button.contrast = this.buttonContrast;
-    button.drawNew();
-    // button.hint = 'cloud operations';
-    button.fixLayout();
-    cloudButton = button;
-    this.controlBar.add(cloudButton);
-    this.controlBar.cloudButton = cloudButton; // for menu positioning*/
-
     this.controlBar.fixLayout = function () {
         x = this.right() - padding;
         [stopButton, pauseButton, startButton].forEach(
@@ -659,152 +636,167 @@ IDE_Morph.prototype.projectMenu = function () {
         pos = this.controlBar.projectButton.bottomLeft(),
         graphicsName = this.currentSprite instanceof SpriteMorph ?
                 'Costumes' : 'Backgrounds',
-        shiftClicked = (world.currentKey === 16);
+        //shiftClicked = (world.currentKey === 16);
 
     // Utility for creating Costumes, etc menus.
     // loadFunction takes in two parameters: a file URL, and a canonical name
-    function createMediaMenu(mediaType, loadFunction) {
-        return function () {
-            var names = this.getMediaList(mediaType),
-                mediaMenu = new MenuMorph(
-                    myself,
-                    localize('Import') + ' ' + localize(mediaType)
-                );
-
-            names.forEach(function (item) {
-                mediaMenu.addItem(
-                    item.name,
-                    function () {loadFunction(item.file, item.name); },
-                    item.help
-                );
-            });
-            mediaMenu.popup(world, pos);
-        };
-    }
 
     menu = new MenuMorph(this);
-    menu.addItem('Project notes...', 'editProjectNotes');
+    menu.addItem('Project notes...', 
+        'editProjectNotes');
     menu.addLine();
-    menu.addItem('New', 'createNewProject',localize('New empty project'));
-
+    menu.addItem('New', 
+        'createNewProject',
+        localize('New empty project'));
     menu.addItem(
         'Open...',
-        function () {
-            var inp = document.createElement('input');
-            if (myself.filePicker) {
-                document.body.removeChild(myself.filePicker);
-                myself.filePicker = null;
-            }
-            inp.type = 'file';
-            inp.style.color = "transparent";
-            inp.style.backgroundColor = "transparent";
-            inp.style.border = "none";
-            inp.style.outline = "none";
-            inp.style.position = "absolute";
-            inp.style.top = "0px";
-            inp.style.left = "0px";
-            inp.style.width = "0px";
-            inp.style.height = "0px";
-            inp.addEventListener(
-                "change",
-                function () {
-                    document.body.removeChild(inp);
-                    myself.filePicker = null;
-                    world.hand.processDrop(inp.files);
-                },
-                false
-            );
-            document.body.appendChild(inp);
-            myself.filePicker = inp;
-            inp.click();
-        },
+        'makersOpenProject',
         localize('open a project') // looks up the actual text in the translator
     );
-
     menu.addItem(
         'Save',
-        function(){
-            this.saveFile();
-        },
+        'saveFile',
         localize('Save project as XML file')
     );
-
-
     menu.addLine();
-
     menu.addItem(
         localize(graphicsName) + '...',
-        createMediaMenu(
-            graphicsName,
-            function loadCostume(file, name) {
-                var url = myself.resourceURL(graphicsName, file),
-                    img = new Image();
-                img.onload = function () {
-                    var canvas = newCanvas(new Point(img.width, img.height));
-                    canvas.getContext('2d').drawImage(img, 0, 0);
-                    myself.droppedImage(canvas, name);
-                };
-                img.src = url;
-            }
-        ),
+        'makersLoadGraphics',
         localize('Select a costume from the media library')
     );
     menu.addItem(
         localize('Sounds') + '...',
-        createMediaMenu(
-            'Sounds',
-            function loadSound(file, name) {
-                var url = myself.resourceURL('Sounds', file),
-                    audio = new Audio();
-                audio.src = url;
-                audio.load();
-                myself.droppedAudio(audio, name);
-            }
-        ),
+        'makersLoadSounds',
         localize('Select a sound from the media library')
     );
-        menu.addLine();
-
+    menu.addLine();
     menu.addItem(
         'Load examples...',
-        function () {
-            var fs = require('fs');
-            //var startupProject = fs.readFileSync('./init.xml').toString();
-
-            // read a list of libraries from an external file,
-            var libMenu = new MenuMorph(this, 'Load example'),
-                libUrl = './examples/examples.txt';
-
-            function loadLib(name) {
-                var path = './examples/'
-                        + name
-                        + '.xml';
-                myself.droppedText(fs.readFileSync(path).toString(), name);
-            }
-
-            //fs.readFileSync('./init.xml').toString()
-            //myself.getURL(libUrl).split('\n').forEach(function (line) {
-            fs.readFileSync(libUrl).toString().split('\n').forEach(function (line) {
-                if (line.length > 0) {
-                    libMenu.addItem(
-                        line.substring(line.indexOf('\t') + 1),
-                        function () {
-                            loadLib(
-                                line.substring(0, line.indexOf('\t'))
-                            );
-                        }
-                    );
-                }
-            });
-
-            libMenu.popup(world, pos);
-        },
+        'loadExamples',
         localize('Load FirstMakers examples')
     );
-
     menu.popup(world, pos);
 };
 
+
+IDE_Morph.prototype.makersOpenProject = function(){
+    var myself= this;   
+    var inp = document.createElement('input');
+    if (myself.filePicker) {
+        document.body.removeChild(myself.filePicker);
+        myself.filePicker = null;
+    }
+    inp.type = 'file';
+    inp.style.color = "transparent";
+    inp.style.backgroundColor = "transparent";
+    inp.style.border = "none";
+    inp.style.outline = "none";
+    inp.style.position = "absolute";
+    inp.style.top = "0px";
+    inp.style.left = "0px";
+    inp.style.width = "0px";
+    inp.style.height = "0px";
+    inp.addEventListener(
+        "change",
+        function () {
+            document.body.removeChild(inp);
+            myself.filePicker = null;
+            world.hand.processDrop(inp.files);
+        },
+        false
+    );
+    document.body.appendChild(inp);
+    myself.filePicker = inp;
+    inp.click();        
+}
+
+IDE_Morph.prototype.makersLoadGraphics = function(){
+    var myself = this;
+    var graphicsName = this.currentSprite instanceof SpriteMorph ?
+                'Costumes' : 'Backgrounds';
+    var pos = this.controlBar.projectButton.bottomLeft();
+    var dir = graphicsName,
+        names = myself.getCostumesList(dir),
+        libMenu = new MenuMorph(
+                myself,
+                localize('Import') + ' ' + localize(dir)
+        );
+
+    function loadCostume(name) {
+        var url = dir + '/' + name,
+            img = new Image();
+            img.onload = function () {
+                var canvas = newCanvas(new Point(img.width, img.height));
+                canvas.getContext('2d').drawImage(img, 0, 0);
+                myself.droppedImage(canvas, name);
+            };
+            img.src = url;
+    }
+    names.forEach(function (line) {
+        if (line.length > 0) {
+            libMenu.addItem(
+                line,
+                function () {loadCostume(line); }
+            );
+        }
+    });
+    libMenu.popup(world, pos);
+}
+
+IDE_Morph.prototype.makersLoadSounds = function(){
+    var myself = this;
+    var pos = this.controlBar.projectButton.bottomLeft();
+    var names = this.getCostumesList('Sounds'),
+    libMenu = new MenuMorph(this, 'Import sound');
+
+    function loadSound(name) {
+        var url = 'Sounds/' + name,
+            audio = new Audio();
+            audio.src = url;
+            audio.load();
+            myself.droppedAudio(audio, name);
+    }
+    names.forEach(function (line) {
+        if (line.length > 0) {
+            libMenu.addItem(
+                line,
+                function () {loadSound(line); }
+            );
+        }
+    });
+    libMenu.popup(world, pos);
+}
+
+/**
+*Carga ejemplos predeterminados.
+*/
+IDE_Morph.prototype.loadExamples = function(){
+    var pos = this.controlBar.projectButton.bottomLeft(),
+        myself = this,
+        fs = require('fs'),
+        libMenu = new MenuMorph(this, 'Load example'),
+        libUrl = './examples/examples.txt'
+    function loadLib(name) {
+        var path = './examples/'+ name+ '.xml';
+                myself.droppedText(fs.readFileSync(path).toString(), name);
+    }
+    fs.readFileSync(libUrl).toString().split('\n').forEach(function (line) {
+        if (line.length > 0) {
+            libMenu.addItem(
+            line.substring(line.indexOf('\t') + 1),
+            function () {
+                loadLib(
+                    line.substring(0, line.indexOf('\t'))
+                );
+            });
+        }
+    });
+    libMenu.popup(world, pos);
+}
+
+/**
+*Guarda un archivo xml que contiene un proyecto de bloques.
+*/
 IDE_Morph.prototype.saveFile = function(){
     var myself = this;
     var dialog = document.createElement('input');
@@ -812,20 +804,15 @@ IDE_Morph.prototype.saveFile = function(){
     dialog.nwsaveas = this.projectName || '';
     dialog.accept = '.XML';
     dialog.addEventListener('change',function(evt){
-    fs = require('fs');
-    var path = dialog.value;
-    var data = myself.serializer.serialize(myself.stage);
-        console.log(data);
-    var regex = /.xml/i;    
-    if(!regex.test(path));
-        path = path+'.xml';
-    fs.writeFile(path, data, 'utf8',function(error){
-        if(error)
-            myself.showMessage(localize(error));
-        else
-            myself.showMessage(localize('Exported!'));
-        });
-        
+        fs = require('fs');
+        var path = dialog.value;
+        var data = myself.serializer.serialize(myself.stage);
+        fs.writeFile(path, data, 'utf8',function(error){
+            if(error)
+                myself.showMessage(localize(error));
+            else
+                myself.showMessage(localize('Exported!'));
+            });      
     });
     dialog.click();
 }
