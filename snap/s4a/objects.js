@@ -130,7 +130,7 @@ SpriteMorph.prototype.init = function(globals) {
         thisArduino.disconnecting = false;
 
         if (thisArduino.disconnected & !silent) {
-            ide.inform(myself.name, localize('Board was disconnected from port\n') + portName + '\n\nIt seems that someone pulled the cable!');
+            ide.inform(myself.name, localize('Board was disconnected from port\n') + portName + localize('\n\nIt seems that someone pulled the cable!'));
             thisArduino.disconnected = false;
         } else if (!silent) {
             ide.inform(myself.name, localize('Board was disconnected from port\n') + portName);

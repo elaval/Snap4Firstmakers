@@ -13,8 +13,8 @@ IDE_Morph.prototype.createLogo = function () {
     this.logo.texture = path; // Overriden
     this.logo.drawNew = function () {
         this.image = newCanvas(this.extent());
-        var context = this.image.getContext('2d'),
-            gradient = context.createLinearGradient(
+        var context = this.image.getContext('2d');
+            /*gradient = context.createLinearGradient(
                 0,
                 0,
                 this.width(),
@@ -23,7 +23,8 @@ IDE_Morph.prototype.createLogo = function () {
         gradient.addColorStop(0, 'black');
         gradient.addColorStop(0.5, myself.frameColor.toString());
         context.fillStyle = MorphicPreferences.isFlat ?
-                myself.frameColor.toString() : gradient;
+                myself.frameColor.toString() : gradient;*/
+        context.fillStyle = myself.frameColor.toString();
         context.fillRect(0, 0, this.width(), this.height());
         if (this.texture) {
             this.drawTexture(this.texture);
@@ -134,7 +135,7 @@ IDE_Morph.prototype.settingsMenu = function () {
             myself.refreshIDE();
         },
         world.isMakersV2,
-        'uncheck to work with newer versions of the board',
+        'uncheck to work with older versions of the board',
         'check to work with version 2.0 of the board'
     );
 
@@ -747,7 +748,7 @@ IDE_Morph.prototype.makersLoadSounds = function(){
     var myself = this;
     var pos = this.controlBar.projectButton.bottomLeft();
     var names = this.getCostumesList('Sounds'),
-    libMenu = new MenuMorph(this, 'Import sound');
+    libMenu = new MenuMorph(this, localize('Import')+' '+localize('Sounds'));
 
     function loadSound(name) {
         var url = 'Sounds/' + name,
@@ -811,8 +812,145 @@ IDE_Morph.prototype.saveFile = function(){
             if(error)
                 myself.showMessage(localize(error));
             else
-                myself.showMessage(localize('Exported!'));
+                myself.showMessage(localize('Exported!'),2);
             });      
     });
     dialog.click();
 }
+/*
+IDE_Morph.prototype.setDefaultDesign = function () {
+    MorphicPreferences.isFlat = false;
+    SpriteMorph.prototype.paletteColor = new Color(230, 230, 230);
+    SpriteMorph.prototype.paletteTextColor = new Color(60, 60, 60);
+    StageMorph.prototype.paletteTextColor = new Color(0,0,0);
+    StageMorph.prototype.paletteColor = new Color(20,20,20);
+    SpriteMorph.prototype.sliderColor = SpriteMorph.prototype.paletteColor;
+    
+    IDE_Morph.prototype.buttonContrast = 0;
+    
+    IDE_Morph.prototype.backgroundColor = new Color(200,200,200);
+    IDE_Morph.prototype.frameColor = new Color(230, 230, 230);
+
+    IDE_Morph.prototype.groupColor = new Color(190, 190, 190);
+    
+    IDE_Morph.prototype.sliderColor = new Color(190, 190, 190);
+    IDE_Morph.prototype.buttonLabelColor = new Color(80,80,80);
+    IDE_Morph.prototype.tabColors = [
+        IDE_Morph.prototype.groupColor,
+        IDE_Morph.prototype.groupColor= new Color(100,100,100),//hover color
+        IDE_Morph.prototype.groupColor= new Color(220,220,220)
+    ];
+    
+    IDE_Morph.prototype.rotationStyleColors = IDE_Morph.prototype.tabColors;
+    //IDE_Morph.prototype.appModeColor = new Color(40, 40, 240);
+    IDE_Morph.prototype.scriptsPaneTexture = this.scriptsTexture();
+    IDE_Morph.prototype.padding = 4;
+    
+    SpriteIconMorph.prototype.labelColor
+        = new Color(60,60,60);
+    CostumeIconMorph.prototype.labelColor
+        = new Color(60,60,60);
+    SoundIconMorph.prototype.labelColor
+        = new Color(60,60,60);
+    TurtleIconMorph.prototype.labelColor
+        = new Color(60,60,60);
+    TurtleIconMorph.prototype.fontSize = 10;
+};
+
+IDE_Morph.prototype.createCategories = function () {
+    // assumes the logo has already been created
+    var myself = this;
+
+    if (this.categories) {
+        this.categories.destroy();
+    }
+    this.categories = new Morph();
+    this.categories.color = this.groupColor;
+    this.categories.silentSetWidth(this.logo.width()); // width is fixed
+
+    function addCategoryButton(category) {
+        var labelWidth = 80,
+            colors = [
+                new Color(160,160,160),
+                new Color(120,120,120),
+                SpriteMorph.prototype.blockColor[category]
+            ],
+            button;
+
+        button = new ToggleButtonMorph(
+            colors,
+            myself, // the IDE is the target
+            function () {
+                myself.currentCategory = category;
+                myself.categories.children.forEach(function (each) {
+                    each.refresh();
+                });
+                myself.refreshPalette(true);
+            },
+            category[0].toUpperCase().concat(category.slice(1)), // label
+            function () {  // query
+                return myself.currentCategory === category;
+            },
+            null, // env
+            null, // hint
+            null, // template cache
+            labelWidth, // minWidth
+            true // has preview
+        );
+
+        button.corner = 8;
+        button.padding = 2;
+        button.labelShadowOffset = new Point(-1, -1);
+        button.labelShadowColor = new Color(255,255,255,0);
+        //button.labelColor = myself.buttonLabelColor;
+        button.labelColor = new Color(255,255,255);
+        button.fontSize = 12;
+        
+        button.fixLayout();
+        button.refresh();
+     
+        myself.categories.add(button);
+        
+        return button;
+    }
+
+    function fixCategoriesLayout() {
+        var buttonWidth = myself.categories.children[0].width(),
+            buttonHeight = myself.categories.children[0].height(),
+            border = 3,
+            rows =  Math.ceil((myself.categories.children.length) / 2),
+            xPadding = (myself.categories.width()
+                - border
+                - buttonWidth * 2) / 3,
+            yPadding = 2,
+            l = myself.categories.left(),
+            t = myself.categories.top(),
+            i = 0,
+            row,
+            col;
+
+        myself.categories.children.forEach(function (button) {
+            i += 1;
+            row = Math.ceil(i / 2);
+            col = 2 - (i % 2);
+            button.setPosition(new Point(
+                l + (col * xPadding + ((col - 1) * buttonWidth)),
+                t + (row * yPadding + ((row - 1) * buttonHeight) + border)
+            ));
+        });
+
+        myself.categories.setHeight(
+            (rows + 1) * yPadding
+                + rows * buttonHeight
+                + 2 * border
+        );
+    }
+
+    SpriteMorph.prototype.categories.forEach(function (cat) {
+        if (!contains(['lists', 'other'], cat)) {
+            addCategoryButton(cat);
+        }
+    });
+    fixCategoriesLayout();
+    this.add(this.categories);
+};*/

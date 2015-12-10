@@ -29,8 +29,8 @@
         "show_in_taskbar": true, 
         "mac_icon": "", 
         "transparent": false, 
-        "toolbar": true, 
-        "icon": ""
+        "toolbar": false, 
+        "icon": "makers/FirstMakersLogo.png"
     }, 
     "dependencies": {
   

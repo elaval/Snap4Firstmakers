@@ -220,9 +220,10 @@ makersTempDict = {
 
     'You may now send tweets (on behalf of':
         'Ahora puedes enviar tweets (en nombre de',
-    'uncheck to work with newer versions of the board':'deshabibitar para las nuevas versiones de la tarjeta',
-    'check to work with version 2.0 of the board':'habilitar para trabajar con la versión 2.0',
+    'uncheck to work with older versions of the board':'desmarcar para trabajar con las\nversiones antiguas',
+    'check to work with version 2.0 of the board':'marcar para trabajar con la versión 2.0',
     'servo to %servoValue':'servo a %servoValue',
+    'servo %digitalPin to %servoValue':'servo %digitalPin a %servoValue',
     'motor spin %motorSpinValue speed %motorSpeedValue': 'girar motor %motorSpinValue velocidad %motorSpeedValue',
     'turn on pin %actuatorPinV2':'encender pin %actuatorPinV2',
     'turn off pin %actuatorPinV2':'apagar pin %actuatorPinV2',
@@ -293,7 +294,7 @@ makersTempDict = {
     'grow':' + ',
     'shrink':' -- ',
     'flip \u2195':'girar \u2195',
-    'Constrain proportions of shapes?\n(you can also hold shift)':'Restringir proporciones de formas ?\n(también se puede hacer pulsando shift)',
+    'Constrain proportions of shapes?\n(you can also hold shift)':'Restringir proporciones de formas ?\n(también se puede pulasar shift)',
     'line':'linea',
     'letter':'letra',
     'tab':'tabulación',
@@ -304,9 +305,70 @@ makersTempDict = {
     'set turbo mode to %b':'modo turbo para %b',
     '%att of %spr':'%att de %spr',
     'Make a variable':'Crear una variable',
+    'Import':'Importar',
+    'sound':'sonido',
+    'uncheck to advanced mode (more block options)':'desmarcar modo básico (más bloques)',
+    'scripts pic...':'fotograma del código',
+    'open a new window\nwith a picture of the stage':'abrir una nueva ventana\ncon una imagen del escenario',
+    'clean up':
+        'alinear bloques',
+    'check to hide (+) symbols\nin block prototype labels':'',
+    'check to prioritize\nscript execution':'marcar para priorizar\nla ejecución del programa',
+    'check for alternative\nGUI design':'marcar para ver una\ninterfaz distinta',
+        'check to disallow\nscript reentrance':
+        '',
+    'uncheck to allow\nscript reentrance':'',
+    'uncheck for smooth\nscaling of vector costumes':'desmarcar para suavizar\nescalado de disfraces',
+    'check to enable basic mode (reduced block options)':'marca para habilitar modo básico (menos bloques)',
+    'uncheck to always show (+) symbols\nin block prototype labels':'',
+    'uncheck to run scripts\nat normal speed':'desmarca para ejecutar programas\nen prioridad normal',
+    'uncheck for default\nGUI design':'desmarcar para ver diseño por omisión',
+    'uncheck for greater speed\nat variable frame rates':'desmarca para mejorar el rendimiento',
+    'check for smooth, predictable\nanimations across computers':'marca para suavizar\n animaciones',
+    'uncheck for round ends of lines':'',
+    'check for flat ends of lines':'',
+    'undrop':'deshacer bloque',
+    'undo the last\nblock drop\nin this pane':'deshacer último\nbloque arrastrado\nen este panel',
+    'open a new window\nwith a picture of all scripts':'abrir una nueva ventana\ncon una foto del código',
+    'find blocks...':'encontrar bloques...',
+    'hide primitives':'ocultar primitivos',
+    'show primitives':'mostrar primitivos',
+    'Stage':'Escenario',
+    'Sprite':'Objeto',
+    'import...':'importar...',
+    'JavaScript function ( %mult%s ) { %code }':'función JavaScript ( %mult%s ) { %code }',
+    'Stage size':
+        'Tamaño del escenario',
+    'Stage width':'Ancho',
+    'Stage height':'Largo',
+    'Zoom blocks':'Zoom de bloques',
+    'build':'construye',
+    'your own':'tus propios',
+    'blocks':'bloques',
+    'pic...':'fotograma...',
+    'Paint Editor':'Editor',
+    'Set the rotation center':'configurar centro de rotación',
+    'Eraser tool':'Herramienta borrar',
+    'Paintbrush tool\n(free draw)':
+		'Herramienta Lápiz',
+	'Stroked Rectangle\n(shift: square)':
+		'Dibujar rectángulo',
+	'Stroked Ellipse\n(shift: circle)':
+		'Dibujar Elipse',
+	'Line tool\n(shift: vertical/horizontal)':
+		'Herramienta Línea\n(shift: vertical/horizontal)',
+	'Filled Rectangle\n(shift: square)':
+		'Rectángulo relleno\n(shift: rectángulo)',
+	'Filled Ellipse\n(shift: circle)':
+		'Elipse relleno\n(shift: circulo)',
+	'Fill a region':
+		'Herramienta de relleno',
+    'Pipette tool\n(pick a color anywhere)':
+		'Herramineta cuentagotas\n(obtiene un color)',
+    '\n\nIt seems that someone pulled the cable!':
+        '\n\nParece que alguien desconectó el cable!',
+    'select a port':'seleccione un puerto',
     '':''
-    
-    
 };
 
 // Add attributes to original SnapTranslator.dict.es
