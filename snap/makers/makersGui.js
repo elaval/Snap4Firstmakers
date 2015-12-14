@@ -806,6 +806,7 @@ IDE_Morph.prototype.saveFile = function(){
     dialog.accept = '.XML';
     dialog.addEventListener('change',function(evt){
         fs = require('fs');
+        myself.setProjectName(evt.path[0].files[0].name);
         var path = dialog.value;
         var data = myself.serializer.serialize(myself.stage);
         fs.writeFile(path, data, 'utf8',function(error){

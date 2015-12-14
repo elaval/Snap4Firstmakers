@@ -368,6 +368,9 @@ makersTempDict = {
     '\n\nIt seems that someone pulled the cable!':
         '\n\nParece que alguien desconectó el cable!',
     'select a port':'seleccione un puerto',
+    'costumes tab help':
+        'importar una foto de otro sitio Web o desde\n'
+            + 'su computador arrastr\u00E1ndolo hasta aqu\u00ED',
     '':''
 };
 
