@@ -294,7 +294,7 @@ makersTempDict = {
     'grow':' + ',
     'shrink':' -- ',
     'flip \u2195':'girar \u2195',
-    'Constrain proportions of shapes?\n(you can also hold shift)':'Restringir proporciones de formas ?\n(también se puede pulasar shift)',
+    'Constrain proportions of shapes?\n(you can also hold shift)':'Restringir proporciones de formas ?\n(también se puede pulsar shift)',
     'line':'linea',
     'letter':'letra',
     'tab':'tabulación',
@@ -308,7 +308,7 @@ makersTempDict = {
     'Import':'Importar',
     'sound':'sonido',
     'uncheck to advanced mode (more block options)':'desmarcar modo básico (más bloques)',
-    'scripts pic...':'fotograma del código',
+    'scripts pic...':'foto del código',
     'open a new window\nwith a picture of the stage':'abrir una nueva ventana\ncon una imagen del escenario',
     'clean up':
         'alinear bloques',
@@ -345,7 +345,7 @@ makersTempDict = {
     'build':'construye',
     'your own':'tus propios',
     'blocks':'bloques',
-    'pic...':'fotograma...',
+    'pic...':'foto...',
     'Paint Editor':'Editor',
     'Set the rotation center':'configurar centro de rotación',
     'Eraser tool':'Herramienta borrar',
@@ -371,6 +371,20 @@ makersTempDict = {
     'costumes tab help':
         'importar una foto de otro sitio Web o desde\n'
             + 'su computador arrastr\u00E1ndolo hasta aqu\u00ED',
+    'Paint a new costume':'Pintar un nuevo disfraz',
+    'Empty':'Vacío',
+    'Image Exported!':'¡Imagen Guardada!',
+    'map %cmdRing to %codeKind %code':'mapear %cmdRing de %codeKind %code',
+    'map %codeListPart of %codeListKind to code %code':'mapear %codeListPart de %codeListKind al código %code',
+    'save %imgsource as costume named %s':'guardar %imgsource como disfraz %s',
+    'collection':'colección',
+    'parameters':'parámetros',
+    'map String to code %code':'mapear texto al código %code',
+    'delete %shd':'borrar %shd',
+    'get Twitter pin':'obtener Twitter pin',
+    'set Twitter pin %s':'configurar Twitter pin %s',
+    'move':'mover',
+    'Sprite Exported!':'Sprite Guardado!',
     '':''
 };
 

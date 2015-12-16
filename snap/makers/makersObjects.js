@@ -260,7 +260,7 @@ SpriteMorph.prototype.initBlocks = function () {
     {
         type: 'reporter',
         category: 'makers',
-        spec: 'get Tweeter pin'
+        spec: 'get Twitter pin'
     };
 
     /**
@@ -270,7 +270,7 @@ SpriteMorph.prototype.initBlocks = function () {
     {
         type: 'command',
         category: 'internet',
-        spec: 'set Tweeter pin %s'
+        spec: 'set Twitter pin %s'
     };
 
     SpriteMorph.prototype.blocks.makersSendTweet =
@@ -1297,3 +1297,32 @@ function overridenBlockTemplates(category) {
 
 StageMorph.prototype.blockTemplates = overridenBlockTemplates;
 SpriteMorph.prototype.blockTemplates = overridenBlockTemplates;
+
+SpriteMorph.prototype.userMenu = function () {
+    var ide = this.parentThatIsA(IDE_Morph),
+        menu = new MenuMorph(this);
+
+    if (ide && ide.isAppMode) {
+        // menu.addItem('help', 'nop');
+        return menu;
+    }
+    menu.addItem("duplicate", 'duplicate');
+    menu.addItem("delete", 'remove');
+    menu.addItem("move", 'moveCenter');
+    /*if (!this.isClone) {
+        menu.addItem("edit", 'edit');
+    }*/
+    menu.addLine();
+    if (this.anchor) {
+        menu.addItem(
+            localize('detach from') + ' ' + this.anchor.name,
+            'detachFromAnchor'
+        );
+    }
+    if (this.parts.length) {
+        menu.addItem('detach all parts', 'detachAllParts');
+    }
+    menu.addItem("export...", 'exportSprite');
+    return menu;
+};
+

@@ -160,3 +160,184 @@ function overridenLabelPart(spec) {
 }
 
 SyntaxElementMorph.prototype.labelPart = overridenLabelPart;
+
+
+BlockMorph.prototype.userMenu = function () {
+    var menu = new MenuMorph(this),
+        world = this.world(),
+        myself = this,
+        shiftClicked = world.currentKey === 16,
+        proc = this.activeProcess(),
+        vNames = proc ? proc.context.outerContext.variables.names() : [],
+        alternatives,
+        top,
+        blck;
+
+   /* menu.addItem(
+        "help...",
+        'showHelp'
+    );*/
+    if (shiftClicked) {
+        top = this.topBlock();
+        if (top instanceof ReporterBlockMorph) {
+            menu.addItem(
+                "script pic with result...",
+                function () {
+                    top.ExportResultPic();
+                },
+                'open a new window\n' +
+                    'with a picture of both\nthis script and its result',
+                new Color(100, 0, 0)
+            );
+        }
+    }
+    if (this.isTemplate) {
+        if (!(this.parent instanceof SyntaxElementMorph)) {
+            if (this.selector !== 'evaluateCustomBlock') {
+                /*menu.addItem(
+                    "hide",
+                    'hidePrimitive'
+                );*/
+            }
+            if (StageMorph.prototype.enableCodeMapping) {
+                menu.addLine();
+                menu.addItem(
+                    'header mapping...',
+                    'mapToHeader'
+                );
+                menu.addItem(
+                    'code mapping...',
+                    'mapToCode'
+                );
+            }
+        }
+        return menu;
+    }
+    menu.addLine();
+    if (this.selector === 'reportGetVar') {
+        blck = this.fullCopy();
+        blck.addShadow();
+        menu.addItem(
+            'rename...',
+            function () {
+                new DialogBoxMorph(
+                    myself,
+                    myself.setSpec,
+                    myself
+                ).prompt(
+                    "Variable name",
+                    myself.blockSpec,
+                    world,
+                    blck.fullImage(), // pic
+                    InputSlotMorph.prototype.getVarNamesDict.call(myself)
+                );
+            }
+        );
+    } else if (SpriteMorph.prototype.blockAlternatives[this.selector]) {
+        menu.addItem(
+            'relabel...',
+            function () {
+                myself.relabel(
+                    SpriteMorph.prototype.blockAlternatives[myself.selector]
+                );
+            }
+        );
+    } else if (this.definition && this.alternatives) { // custom block
+        alternatives = this.alternatives();
+        if (alternatives.length > 0) {
+            menu.addItem(
+                'relabel...',
+                function () {myself.relabel(alternatives); }
+            );
+        }
+    }
+
+    menu.addItem(
+        "duplicate",
+        function () {
+            var dup = myself.fullCopy(),
+                ide = myself.parentThatIsA(IDE_Morph);
+            dup.pickUp(world);
+            if (ide) {
+                world.hand.grabOrigin = {
+                    origin: ide.palette,
+                    position: ide.palette.center()
+                };
+            }
+        },
+        'make a copy\nand pick it up'
+    );
+    if (this instanceof CommandBlockMorph && this.nextBlock()) {
+        menu.addItem(
+            (proc ? this.fullCopy() : this).thumbnail(0.5, 60),
+            function () {
+                var cpy = myself.fullCopy(),
+                    nb = cpy.nextBlock(),
+                    ide = myself.parentThatIsA(IDE_Morph);
+                if (nb) {nb.destroy(); }
+                cpy.pickUp(world);
+                if (ide) {
+                    world.hand.grabOrigin = {
+                        origin: ide.palette,
+                        position: ide.palette.center()
+                    };
+                }
+            },
+            'only duplicate this block'
+        );
+    }
+    menu.addItem(
+        "delete",
+        'userDestroy'
+    );
+    menu.addItem(
+        "script pic...",
+        'savePic',
+        'open a new window\nwith a picture of this script'
+    );
+    if (proc) {
+        if (vNames.length) {
+            menu.addLine();
+            vNames.forEach(function (vn) {
+                menu.addItem(
+                    vn + '...',
+                    function () {
+                        proc.doShowVar(vn);
+                    }
+                );
+            });
+        }
+        return menu;
+    }
+    if (this.parentThatIsA(RingMorph)) {
+        menu.addLine();
+        menu.addItem("unringify", 'unringify');
+        menu.addItem("ringify", 'ringify');
+        return menu;
+    }
+    if (this.parent instanceof ReporterSlotMorph
+            || (this.parent instanceof CommandSlotMorph)
+            || (this instanceof HatBlockMorph)
+            || (this instanceof CommandBlockMorph
+                && (this.topBlock() instanceof HatBlockMorph))) {
+        return menu;
+    }
+    menu.addLine();
+    menu.addItem("ringify", 'ringify');
+    if (StageMorph.prototype.enableCodeMapping) {
+        menu.addLine();
+        menu.addItem(
+            'header mapping...',
+            'mapToHeader'
+        );
+        menu.addItem(
+            'code mapping...',
+            'mapToCode'
+        );
+    }
+    return menu;
+};
+
+BlockMorph.prototype.savePic= function(){
+    IDE_Morph.prototype.savePic(this.topBlock().scriptPic().toDataURL());
+}

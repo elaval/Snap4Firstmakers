@@ -802,10 +802,11 @@ IDE_Morph.prototype.saveFile = function(){
     var myself = this;
     var dialog = document.createElement('input');
     dialog.type = 'file';
+    dialog.nwworkingdir = MakerApp.userHomePath;
     dialog.nwsaveas = this.projectName || '';
     dialog.accept = '.XML';
-    dialog.addEventListener('change',function(evt){
-        fs = require('fs');
+    fs = require('fs');
+    dialog.addEventListener('change',function(evt){     
         myself.setProjectName(evt.path[0].files[0].name);
         var path = dialog.value;
         var data = myself.serializer.serialize(myself.stage);
@@ -818,6 +819,61 @@ IDE_Morph.prototype.saveFile = function(){
     });
     dialog.click();
 }
+TurtleIconMorph.prototype.userMenu = function () {
+    return;
+};
+
+IDE_Morph.prototype.savePic = function(img64){
+    var myself = this; 
+    var dialog = document.createElement('input');
+    dialog.type = 'file';
+    dialog.nwworkingdir = MakerApp.userHomePath;
+    dialog.nwsaveas = 'image';
+    dialog.accept = '.png';
+    var fs = require('fs');
+    dialog.addEventListener('change',function(evt){
+        var path = dialog.value;
+        var data =  img64.replace(/^data:image\/\w+;base64,/, "");
+        var buffer = new Buffer(data, 'base64');
+        fs.writeFile(path, buffer,function(error){
+            if(error)
+              MakerApp.inform(error);
+            else
+              MakerApp.inform(localize('Image Exported!'));
+            });      
+    });
+    dialog.click();
+}
+
+IDE_Morph.prototype.exportSprite = function (sprite) {
+
+    var data = this.serializer.serialize(sprite.allParts());
+    var myself = this; 
+    var dialog = document.createElement('input');
+    dialog.type = 'file';
+    dialog.nwworkingdir = MakerApp.userHomePath;
+    dialog.nwsaveas = sprite.name || 'sprite';
+    dialog.accept = '.xml';
+   
+    var fs = require('fs');
+    var buffer = '<sprites app="'
+        + this.serializer.app
+        + '" version="'
+        + this.serializer.version
+        + '">'
+        + data
+        + '</sprites>'
+    dialog.addEventListener('change',function(evt){
+        var path = dialog.value;
+        fs.writeFile(path, buffer, function(error){
+            if(error)
+              MakerApp.inform(error);
+            else
+              MakerApp.inform(localize('Sprite Exported!'));
+            });      
+    });
+    dialog.click();  
+};
 /*
 IDE_Morph.prototype.setDefaultDesign = function () {
     MorphicPreferences.isFlat = false;

@@ -17,6 +17,9 @@
 var MakerApp = {};
 MakerApp.systemSlash = process.platform ==='win32'? '/':'\\';
 
+MakerApp.userHomePath = process.env.HOME || process.env.USERPROFILE;
+
+
 // Auxiliary array to keep references to old (disconnected) board objects and avoid conflicts with pending callbacks & interruptions
 MakerApp.oldboards = [];
 
