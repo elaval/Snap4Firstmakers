@@ -203,13 +203,18 @@ IDE_Morph.prototype.snapMenu = function () {
     menu.addItem(
         'FirstMakers website',
         function () {
-            window.open('http://www.firstmakers.com', 'FirstMakers');
+            var gui = require('nw.gui');
+            // Open URL with default browser.
+            gui.Shell.openExternal('http://www.firstmakers.com');
+    
         }
     );
     menu.addItem(
         'Download source code',
         function () {
-            window.open('https://github.com/elaval/Snap4Firstmakers', 'FirstMakers');
+            var gui = require('nw.gui');
+            // Open URL with default browser.
+            gui.Shell.openExternal('https://github.com/elaval/Snap4Firstmakers');
         }
     );
 
