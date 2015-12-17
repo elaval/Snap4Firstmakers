@@ -245,7 +245,7 @@ IDE_Morph.prototype.aboutFirstMakers = function () {
     module, aboutBtn, creditsBtn,
     world = this.world();
 
-    aboutTxt = localize('Snap4Firstmakers! 1.0.2-beta\n\n Is a modification of Snap4Arduino Software for controlling FirstMakers Board');
+    aboutTxt = localize('Snap4Firstmakers!\n\n Is a modification of Snap4Arduino Software for controlling FirstMakers Board');
 
     creditsTxt = localize('Contributors\n\nErnesto Laval: MacOSX version, architectural decisions,\nseveral features and bugfixes, Spanish translation\nJose Saavedra: Hardware Desing\nEdison Delgado: Software engineering\n');
 
@@ -681,9 +681,21 @@ IDE_Morph.prototype.projectMenu = function () {
         'loadExamples',
         localize('Load FirstMakers examples')
     );
+   /* menu.addItem(
+        'List Ports...',
+        'listPorts'
+    );*/
     menu.popup(world, pos);
 };
 
+IDE_Morph.prototype.listPorts = function(){
+    var serialPort = require("serialport");
+    serialPort.list(function (err, ports) {
+        ports.forEach(function(port) {
+            console.log(port);
+        });
+    });
+}
 
 IDE_Morph.prototype.makersOpenProject = function(){
     var myself= this;   
@@ -827,13 +839,57 @@ IDE_Morph.prototype.saveFile = function(){
 TurtleIconMorph.prototype.userMenu = function () {
     return;
 };
+SpriteIconMorph.prototype.userMenu = function () {
+    var menu = new MenuMorph(this),
+        myself = this;
+    if (this.object instanceof StageMorph) {
+        menu.addItem(
+            'pic...',
+            function () {
+                IDE_Morph.prototype.savePic(
+                    myself.object.fullImageClassic().toDataURL(), 
+                    myself.object.name
+                );
+            },
+            'open a new window\nwith a picture of the stage'
+        );
+        return menu;
+    }
+    if (!(this.object instanceof SpriteMorph)) {return null; }
+    menu.addItem("show", 'showSpriteOnStage');
+    menu.addLine();
+    menu.addItem("duplicate", 'duplicateSprite');
+    menu.addItem("delete", 'removeSprite');
+    menu.addLine();
+    if (StageMorph.prototype.enableInheritance) {
+        menu.addItem("parent...", 'chooseExemplar');
+    }
+    if (this.object.anchor) {
+        menu.addItem(
+            localize('detach from') + ' ' + this.object.anchor.name,
+            function () {myself.object.detachFromAnchor(); }
+        );
+    }
+    if (this.object.parts.length) {
+        menu.addItem(
+            'detach all parts',
+            function () {myself.object.detachAllParts(); }
+        );
+    }
+    menu.addItem("export...", 'exportSprite');
+    menu.addLine();
+    menu.addItem('connect to Arduino', function() { myself.object.arduino.attemptConnection() });
+    menu.addItem('disconnect Arduino', function() { myself.object.arduino.disconnect() });
+    return menu;
+};
 
-IDE_Morph.prototype.savePic = function(img64){
+
+IDE_Morph.prototype.savePic = function(img64, name){
     var myself = this; 
     var dialog = document.createElement('input');
     dialog.type = 'file';
     dialog.nwworkingdir = MakerApp.userHomePath;
-    dialog.nwsaveas = 'image';
+    dialog.nwsaveas = name ||'image';
     dialog.accept = '.png';
     var fs = require('fs');
     dialog.addEventListener('change',function(evt){

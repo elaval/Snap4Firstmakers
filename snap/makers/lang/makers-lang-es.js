@@ -385,6 +385,7 @@ makersTempDict = {
     'set Twitter pin %s':'configurar Twitter pin %s',
     'move':'mover',
     'Sprite Exported!':'Sprite Guardado!',
+    'Backgrounds':'Fondo Escenario',
     '':''
 };
 
