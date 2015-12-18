@@ -678,5 +678,28 @@ Process.prototype.updateThingSpeak = function(value, field, channel, key) {
     this.pushContext();
 }
 
+Process.prototype.soilMoisture = function(pin){
+    var sprite = this.homeContext.receiver;
+    if (sprite.makersIsBoardConnected()) {
+        var value = this.makersReadSensor(pin);
+        return Math.round((100.0*value/900.0) * 10 ) / 10;     
+    }
+    else{
+        throw new Error(localize("Arduino not connected"));
+    }
+}
 
+Process.prototype.temperatureProbe = function(pin){
+    var sprite = this.homeContext.receiver;
+    if (sprite.makersIsBoardConnected()) {
+        var vr = this.makersReadSensor(pin) * (5/1023);
+        var rt = (vr*10000) / (5 - vr);
+        var celsius = (1/3470)* Math.log(rt/10000) + 1/298;
+        celsius = (1/celsius) - 273;
+        return  Math.round(celsius*10)/10;         
+    }
+    else{
+        throw new Error(localize("Arduino not connected"));
+    }
+}
 

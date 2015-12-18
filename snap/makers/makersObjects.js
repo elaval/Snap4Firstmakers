@@ -326,6 +326,18 @@ SpriteMorph.prototype.initBlocks = function () {
             category: 'motion',
             spec:'Go to initial position'   
     };
+    SpriteMorph.prototype.blocks.soilMoisture =
+    {
+        type:'reporter',
+        category:'makers',
+        spec:'soil moisture in %sensorPin'    
+    };
+    SpriteMorph.prototype.blocks.temperatureProbe =
+    {
+        type:'reporter',
+        category:'makers',
+        spec:'temperature probe in %sensorPin'    
+    };
 
 
 
@@ -627,7 +639,6 @@ function overridenBlockTemplates(category) {
         this.setHeading(90);
         
     }
-
 
     if (category === 'motion') {
         if (world.isMakersBasicMode) {
@@ -1273,6 +1284,8 @@ function overridenBlockTemplates(category) {
             blocks.push('-');
             blocks.push(blockBySelector('makersServoWrite'));
         }
+        blocks.push(blockBySelector('soilMoisture'));
+        blocks.push(blockBySelector('temperatureProbe'));
 
     } else if (category === 'internet') {
         blocks.push('-');

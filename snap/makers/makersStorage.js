@@ -9,7 +9,6 @@ SnapSerializer.prototype.openProject = function (project, ide) {
             sprite.arduinoDisconnect();
         }
     })
-
     this.OriginalOpenProject(project,ide);
 }
 

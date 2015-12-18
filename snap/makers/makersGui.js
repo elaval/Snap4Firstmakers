@@ -664,6 +664,11 @@ IDE_Morph.prototype.projectMenu = function () {
         'saveFile',
         localize('Save project as XML file')
     );
+    menu.addItem(
+        'Save As',
+        'saveFileAs',
+        localize('Save project as XML file')
+    );
     menu.addLine();
     menu.addItem(
         localize(graphicsName) + '...',
@@ -687,6 +692,24 @@ IDE_Morph.prototype.projectMenu = function () {
     );*/
     menu.popup(world, pos);
 };
+
+IDE_Morph.prototype.createNewProject = function () {
+    var myself = this;
+    this.confirm(
+        'Replace the current project with a new one?',
+        'New Project',
+        function () {
+            if (myself.isArduinoTranslationMode) {
+                // Ok, these names are getting silly
+                StageMorph.prototype.blockTemplates = StageMorph.prototype.notSoOriginalBlockTemplates;
+                SpriteMorph.prototype.blockTemplates = SpriteMorph.prototype.notSoOriginalBlockTemplates;
+                myself.isArduinoTranslationMode = false;
+            }
+            myself.newProject();
+            MakerApp.currentProjectPath = '';
+        }
+    );
+}
 
 IDE_Morph.prototype.listPorts = function(){
     var serialPort = require("serialport");
@@ -720,11 +743,13 @@ IDE_Morph.prototype.makersOpenProject = function(){
             document.body.removeChild(inp);
             myself.filePicker = null;
             world.hand.processDrop(inp.files);
+            MakerApp.currentProjectPath=inp.value;
         },
         false
     );
     document.body.appendChild(inp);
     myself.filePicker = inp;
+    console.log(inp.value);
     inp.click();        
 }
 
@@ -812,30 +837,7 @@ IDE_Morph.prototype.loadExamples = function(){
     libMenu.popup(world, pos);
 }
 
-/**
-*Guarda un archivo xml que contiene un proyecto de bloques.
-*/
-IDE_Morph.prototype.saveFile = function(){
-    var myself = this;
-    var dialog = document.createElement('input');
-    dialog.type = 'file';
-    dialog.nwworkingdir = MakerApp.userHomePath;
-    dialog.nwsaveas = this.projectName || '';
-    dialog.accept = '.XML';
-    fs = require('fs');
-    dialog.addEventListener('change',function(evt){     
-        myself.setProjectName(evt.path[0].files[0].name);
-        var path = dialog.value;
-        var data = myself.serializer.serialize(myself.stage);
-        fs.writeFile(path, data, 'utf8',function(error){
-            if(error)
-                myself.showMessage(localize(error));
-            else
-                myself.showMessage(localize('Exported!'),2);
-            });      
-    });
-    dialog.click();
-}
+
 TurtleIconMorph.prototype.userMenu = function () {
     return;
 };
@@ -883,6 +885,61 @@ SpriteIconMorph.prototype.userMenu = function () {
     return menu;
 };
 
+/**
+*Guarda un archivo xml que contiene un proyecto de bloques.
+*/
+IDE_Morph.prototype.saveFileAs = function(){
+    var myself = this;
+    var dialog = document.createElement('input');
+    dialog.type = 'file';
+    dialog.nwworkingdir = MakerApp.userHomePath;
+    dialog.nwsaveas = this.projectName || '';
+    dialog.accept = '.XML';
+    fs = require('fs');
+    dialog.addEventListener('change',function(evt){     
+        myself.setProjectName(evt.path[0].files[0].name);
+        var path = dialog.value;
+        var data = myself.serializer.serialize(myself.stage);
+        MakerApp.currentProjectPath = path;
+        fs.writeFile(path, data, 'utf8',function(error){
+            if(error)
+                myself.showMessage(localize(error));
+            else
+                myself.showMessage(localize('Exported!'),2);
+            });      
+    });
+    dialog.click();
+}
+
+IDE_Morph.prototype.saveFile = function(){
+    var myself= this,
+    fs = require('fs');
+    if(MakerApp.currentProjectPath === '')
+    {
+       this.saveFileAs(); 
+    }   
+    else
+    {
+        fs.writeFile(
+            MakerApp.currentProjectPath,
+            myself.serializer.serialize(myself.stage),
+            function(error){
+                if(error)
+                    myself.showMessage(localize(error));
+                else   
+                    myself.showMessage(localize('Exported!'),2);
+            }
+        );
+    }
+}
+
+IDE_Morph.prototype.createSaveFileDialog = function(workingdir, accept){
+    var dialog = document.createElement('input');
+    dialog.type= 'file';
+    dialog.accept = accept ||'';
+    dialog.nwworkingdir = workingdir || MakerApp.userHomePath;
+    return dialog;
+}
 
 IDE_Morph.prototype.savePic = function(img64, name){
     var myself = this; 
