@@ -388,7 +388,12 @@ makersTempDict = {
     'Backgrounds':'Fondo Escenario',
     'Save As':'Guardar como',
     'temperature probe in %sensorPin' :'sonda temperatura en %sensorPin' ,
-    'soil moisture in %sensorPin':'humedad suelo en %sensorPin'
+    'soil moisture in %sensorPin':'humedad suelo en %sensorPin',
+    'Enter hostname or ip address:': 'Ingrese el Hostname o una direccion Ip:',
+    'Network port':'Puerto remoto',
+    'select a port': 'seleccione un puerto'
+
+    
 };
 
 // Add attributes to original SnapTranslator.dict.es

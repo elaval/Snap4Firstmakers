@@ -53,14 +53,14 @@ s4aTempDict = {
 	'servo':
 		'servo',
 
-	'clockwise':
-		'sentido horario',
+	'clockwise (1500-1000)':
+		'sentido horario (1500-1000)',
 
-	'counter-clockwise':
-		'sentido anti-horario',
+	'counter-clockwise (1500-2000)':
+		'sentido anti-horario (1500-2000)',
 
-	'stopped':
-		'parado',
+	'stopped (1500)':
+		'parado (1500)',
 
 	'angle (0-180)':
 		'ángulo (0-180)',
@@ -95,8 +95,8 @@ s4aTempDict = {
     'set servo %servoPin to %servoValue':
         'fijar servo %servoPin en %servoValue',
 
-    'set PWM pin %pwmPin to %n':
-        'fijar pin PWM %pwmPin en %n',
+    'set analog pin %pwmPin to %n':
+        'fijar pin analógico %pwmPin en %n',
 
     'Connecting board at port\n': 
         'Conectando tarjeta en la puerta\n',

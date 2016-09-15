@@ -1,3 +1,26 @@
+Process.prototype.connectArduino = function (port) {
+    var sprite = this.homeContext.receiver;
+
+    if (!sprite.arduino.connecting) {
+        sprite.arduino.connecting = true;
+        if (sprite.arduino.board === undefined) {
+            sprite.arduino.connect(port);
+        }
+    }
+
+    if (sprite.arduino.justConnected) {
+        sprite.arduino.justConnected = undefined;
+        return;
+    }
+
+    if (sprite.arduino.board && sprite.arduino.board.connected) {
+        return;
+    }
+
+    this.pushContext('doYield');
+    this.pushContext();
+};
+
 Process.prototype.setPinMode = function (pin, mode) {
     var sprite = this.homeContext.receiver;
 
@@ -11,49 +34,55 @@ Process.prototype.setPinMode = function (pin, mode) {
             case 'digital output': val = board.MODES.OUTPUT; break;
             case 'PWM': val = board.MODES.PWM; break;
             case 'servo': val = board.MODES.SERVO; break;
-            // not used, but left it here anyway
             case 'analog input': val = board.MODES.ANALOG; break;
         }
+
         if (this.context.pinSet === undefined) {
             if (board.pins[pin].supportedModes.indexOf(val) > -1) {	
                 board.pinMode(pin, val);
             } else { 
-                return null
+                return null;
             }
         }
+
         if (board.pins[pin].mode === val) {
             this.context.pinSet = true;
             return null;
         }
+
         this.pushContext('doYield');
         this.pushContext();
     } else {
-        throw new Error(localize("Arduino not connected"));	
+        throw new Error(localize('Arduino not connected'));	
     }
-}
+};
 
 Process.prototype.servoWrite = function (pin, value) {
     var sprite = this.homeContext.receiver;
 
     if (sprite.arduino.isBoardReady()) {
 
-        var board = sprite.arduino.board; 
+        var board = sprite.arduino.board,
+            numericValue;
 
         if (board.pins[pin].mode != board.MODES.SERVO) {
             board.pinMode(pin, board.MODES.SERVO);
+			board.servoConfig(pin,600,2400);
         }
 
-        var numericValue;
         switch (value[0]) {
-            case "clockwise":
+            case 'clockwise':
                 numericValue = 1200;
             break;
-            case "counter-clockwise":
-                numericValue = 1700;
+            case 'counter-clockwise':
+                numericValue = 1800;
             break;
-            case "stopped":
+            case 'stopped':
                 numericValue = 1500;
             break;
+            case 'disconnected':
+                board.pinMode(pin, board.MODES.OUTPUT);
+                return null;
             default:
                 numericValue = value;
             break;
@@ -61,9 +90,9 @@ Process.prototype.servoWrite = function (pin, value) {
         board.servoWrite(pin, numericValue);
         return null;
     } else {
-        throw new Error(localize("Arduino not connected"));			
+        throw new Error(localize('Arduino not connected'));			
     }
-}
+};
 
 Process.prototype.reportAnalogReading = function (pin) {
     var sprite = this.homeContext.receiver;
@@ -91,9 +120,9 @@ Process.prototype.reportAnalogReading = function (pin) {
         this.pushContext();
 
     } else {
-        throw new Error(localize("Arduino not connected"));	
+        throw new Error(localize('Arduino not connected'));	
     }
-}
+};
 
 Process.prototype.reportDigitalReading = function (pin) {
     var sprite = this.homeContext.receiver;
@@ -103,24 +132,20 @@ Process.prototype.reportDigitalReading = function (pin) {
 
         if (board.pins[pin].mode != board.MODES.INPUT) {
             board.pinMode(pin, board.MODES.INPUT);
-            board.digitalRead(pin, nop);
+            board.digitalRead(pin, function(value) { board.pins[pin].value = value });
         }
         return board.pins[pin].value == 1;
     } else {
-        throw new Error(localize("Arduino not connected"));		
+        throw new Error(localize('Arduino not connected'));		
     }
-
-}
-
+};
 
 Process.prototype.digitalWrite = function (pin, booleanValue) {
     var sprite = this.homeContext.receiver;
 
     if (sprite.arduino.isBoardReady()) {
         var board = sprite.arduino.board,
-            val;
-
-        if (booleanValue) { val = board.HIGH } else { val = board.LOW };
+            val = booleanValue ? board.HIGH : board.LOW;
 
         if (board.pins[pin].mode != board.MODES.OUTPUT) {
             board.pinMode(pin, board.MODES.OUTPUT);
@@ -130,9 +155,9 @@ Process.prototype.digitalWrite = function (pin, booleanValue) {
 
         return null;
     } else {
-        throw new Error(localize("Arduino not connected"));
+        throw new Error(localize('Arduino not connected'));
     }
-}
+};
 
 Process.prototype.pwmWrite = function (pin, value) {
     var sprite = this.homeContext.receiver;
@@ -147,6 +172,6 @@ Process.prototype.pwmWrite = function (pin, value) {
         board.analogWrite(pin, value);
         return null;
     } else {
-        throw new Error(localize("Arduino not connected"));
+        throw new Error(localize('Arduino not connected'));
     }
-}
+};

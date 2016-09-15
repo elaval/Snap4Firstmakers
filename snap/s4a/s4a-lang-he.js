@@ -48,9 +48,9 @@
     'digital output': 'יציאה דיגיטלית' ,
     'PWM': 'מנוע' ,
     'servo': 'סרבו',
-    'clockwise': 'השעון כוון עם' ,
-    'counter-clockwise': 'השעון כוון נגד',
-    'stopped': 'עצור',
+    'clockwise (1500-1000)': 'השעון כוון עם' ,
+    'counter-clockwise (1500-2000)': 'השעון כוון נגד',
+    'stopped (1500)': 'עצור',
     'angle (0-180)': '(זווית (0-180',
     'connect to Arduino': 'התחבר לארדוינו',
     'disconnect Arduino':  'התנתק מהארדוינו',
@@ -64,7 +64,7 @@
     
     'set digital pin %digitalPin to %b':  '%b -ל %digitalPin דיגיטליית רגל שנה',
     'set servo %servoPin to %servoValue': '%servoValue -ל %servoPin ברגל מנוע הבא',
-    'set PWM pin %pwmPin to %n': '%n -ל %pwmPin ברגל PWM קבע',
+    'set analog pin %pwmPin to %n': '%n -ל %pwmPin ברגל PWM קבע',
     'Connecting board at port\n':  'חבר לכניסה\n',
     'An Arduino board has been connected. Happy prototyping!': 'ארדוינו חובר  בהצלחה!',
     

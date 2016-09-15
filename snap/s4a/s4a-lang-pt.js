@@ -46,7 +46,7 @@ s4aTempDict = {
         'entrada digital',
 
     'digital output':
-        'sortida digital',
+        'saída digital',
 
     'PWM':
         'PWM',
@@ -55,90 +55,93 @@ s4aTempDict = {
         'servo',
 
     'clockwise (1500-1000)':
-        'sentit horari (1500-1000)',
+        'no sentido dos ponteiros do relógio (1500-1000)',
 
     'counter-clockwise (1500-2000)':
-        'sentit anti-horari (1500-2000)',
+        'no sentido contrário aos ponteiros do relógio (1500-2000)',
 
-    'stopped':
-        'aturat (1500)',
+    'stopped (1500)':
+        'parado (1500)',
 
     'disconnected':
-        'desconnectat',
+        'desligado',
 
     'angle (0-180)':
-        'angle (0-180)',
+        'com ângulo (0-180)',
 
     'connect to Arduino':
-        'connectar a Arduino',
+        'ligar ao Arduino',
 
     'disconnect Arduino':
-        'desconnectar Arduino',
+        'desligar do Arduino',
 
     'Connect Arduino':
-        'Connectar Arduino',
+        'Ligar Arduino',
 
     'Disconnect Arduino':
-        'Desconnectar Arduino',
+        'Desligar Arduino',
 
     'analog reading %analogPin':
-        'lectura analògica %analogPin',
+        'o valor analógico no pino %analogPin',
 
     'digital reading %digitalPin':
-        'lectura digital %digitalPin',
+        'o valor booleano no pino digital %digitalPin é «verdadeiro»',
 
     'connect arduino at %port':
-        'connectar arduino al port %port',
+        'liga ao Arduino em %port',
+
+    'connect arduino at %s':
+        'liga ao Arduino em %s',
 
     'setup digital pin %digitalPin as %pinMode':
-        'configurar pin %digitalPin com a %pinMode',
+        'configura o pino digital %digitalPin como %pinMode',
 
     'set digital pin %digitalPin to %b':
-        'posar pin digital %digitalPin a %b',
+        'coloca no pino digital %digitalPin o valor booleano %b',
 
     'set servo %servoPin to %servoValue':
-        'posar servo %servoPin a %servoValue',
+        'coloca o servo %servoPin %servoValue',
 
     'set analog pin %pwmPin to %n':
-        'posar pin analògic %pwmPin a %n',
+        'coloca no pino analógico %pwmPin o valor %n',
 
     'Connecting board at port\n': 
-        'Connectant placa al port\n',
+        'Ligando placa no porto\n',
 
     'An Arduino board has been connected. Happy prototyping!':
-        'S\'ha connectat correctament una placa Arduino.\nFeliç prototipatge!',
+        'Uma placa Arduino foi ligada.\nFeliz prototipagem!',
 
     'Board was disconnected from port\n':
-        'S\'ha desconnectat la placa del port\n',
+        'A placa foi desligada do porto\n',
 
     'It seems that someone pulled the cable!':
-        'Sembla que algú ha desconnectat el cable!',
+        'Parece que alguém desligou o cabo!',
 
     'Error connecting the board.':
-        'Error en connectar a la placa',
+        'Erro ao ligar à placa',
 
     'There is already a board connected to this sprite':
-        'Aquest objecte ja té una placa connectada',
+        'Este objecto já tem uma placa ligada',
 
     'Could not connect an Arduino\nNo boards found':
-        'No s\'ha pogut connectar cap Arduino\nNo s\'ha trobat cap placa',
+        'Não foi possível ligar a um Arduino\nNão foram encontradas placas',
 
     'Could not talk to Arduino in port\n':
-        'No s\'ha pogut establir comunicació amb Arduino al port\n',
+        'Não foi possível comunicar com o Arduino no porto\n',
 
     'Check if firmata is loaded.':
-        'Reviseu que Firmata hi estigui carregat.',
+        'Verifique se a firmata já foi carregada.',
 
     'An error was detected on the board\n\n':
-        'S\'ha detectat un error a la placa\n\n',
+        'Detectou-se um erro na placa\n\n',
 
     'Board is not connected':
-        'La placa no està connectada',
+        'A placa não está ligada',
 
     'New Arduino translatable project':
-        'Nou projecte traduïble a Arduino' 
+        'Novo projecto traduzível para Arduino' 
 
 };
 
-// Add attributes to original SnapTranslator.dict.ca
-for (var attrname in s4aTempDict) { SnapTranslator.dict.ca[attrname] = s4aTempDict[attrname]; }
+// Add attributes to original SnapTranslator.dict.pt
+for (var attrname in s4aTempDict) { SnapTranslator.dict.pt[attrname] = s4aTempDict[attrname]; }

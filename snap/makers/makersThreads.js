@@ -81,12 +81,11 @@ Process.prototype.makersBuzzerOn = function() {
     var sprite = this.homeContext.receiver;
 
 	if (sprite.makersIsBoardConnected()) {
-		this.setPinMode(6,['digital output']);
-		this.digitalWrite(6,true)
+		this.setPinMode(6,['PWM']);
+		this.pwmWrite(6,60);//Peticion bajar la intensidad del buzzer
 	} else {
-		throw new Error(localize("Arduino not connected"))
+		throw new Error(localize("Arduino not connected"));
 	}
-
 };
 
 /**
@@ -96,8 +95,8 @@ Process.prototype.makersBuzzerOff = function() {
     var sprite = this.homeContext.receiver;
 
 	if (sprite.makersIsBoardConnected()) {
-		this.setPinMode(6,['digital output']);
-		this.digitalWrite(6,false)
+		this.setPinMode(6,['PWM']);
+		this.pwmWrite(6,0);
 	} else {
 		throw new Error(localize("Arduino not connected"))
 	}
@@ -177,7 +176,7 @@ Process.prototype.makersInfrared = function () {
 		var val = this.reportAnalogReading(4);
 		return world.makers.convertAnalogMeasure.infrared(val);
 	} else {
-		throw new Error(localize("Arduino not connected"))
+		throw new Error(localize("Arduino not connected"));
 	}
 
 };
@@ -193,7 +192,7 @@ Process.prototype.makersPotentiometer = function () {
 		var val = this.reportAnalogReading(5);
 		return world.makers.convertAnalogMeasure.potentiometer(val);
 	} else {
-		throw new Error(localize("Arduino not connected"))
+		throw new Error(localize("Arduino not connected"));
 	}
 
 };
@@ -209,10 +208,11 @@ Process.prototype.makersSwitch = function() {
 
 	if (sprite.makersIsBoardConnected()) {
         var val;
+        this.setPinMode(2,['digital input']);
 		val = this.reportDigitalReading(2);
 		return val;
 	} else {
-		throw new Error(localize("Arduino not connected"))
+		throw new Error(localize("Arduino not connected"));
 	}
 };
 
@@ -384,23 +384,22 @@ Process.prototype.makersServoWrite = function(pin,value)
 {
     var sprite = this.homeContext.receiver,
     board = sprite.arduino.board;
-
 	if (sprite.makersIsBoardConnected()) {
 		this.setPinMode(pin,['servo']);
 		var numericValue;
 		switch (value[0]) {
 			case "clockwise":
 				numericValue = 1200;
-			break;
+			     break;
 			case "counter-clockwise":
 				numericValue = 1700;
-			break;
+			    break;
 			case "stopped":
 				numericValue = 1500;
-			break;
+			    break;
 			default:
 				numericValue = value;
-			break;
+			    break;
 		}
         //console.log('servo en: '+ numericValue +' grados' +' en el pin '+pin);
 		board.servoWrite(pin, numericValue);
@@ -412,8 +411,35 @@ Process.prototype.makersServoWrite = function(pin,value)
 	}
 };
 
-Process.prototype.makersServoWriteV2 = function(value){
-    this.makersServoWrite(3,value);
+/***************************************
+*   
+****************************************/
+Process.prototype.makersServoWriteV2 = function (pin, value) {
+    console.log(pin);
+    var sprite = this.homeContext.receiver;
+    if (sprite.makersIsBoardConnected()) {
+        var pinValue = 3;
+        if(pin !== undefined){
+            switch (pin) {
+                case 'D0':
+                    pinValue = 10;
+                    break;
+                case 'D1':
+                    pinValue = 11;
+                    break;
+                case 'D2':
+                    pinValue = 12;
+                    break;
+                default:
+                    pinValue = 3;
+                    break;
+                }
+        }
+        console.log('sending servo v2 pin: '+ pinValue + ' value: '+ value);
+        this.makersServoWrite(pinValue, value);
+    } else {
+        throw new Error(localize("Arduino not connected"));
+    }
 }
 
 Process.prototype.outputDigitalOff = function(pin){
@@ -481,7 +507,27 @@ Process.prototype.makersMotor = function(spinValue,speed){
         throw new Error(localize("Arduino not connected"));   
     }
 }
+/*****/
 
+Process.prototype.makersExtMotor = function(spinValue, speed){
+    var sprite = this.homeContext.receiver,
+    board = sprite.arduino.board;
+    if(sprite.makersIsBoardConnected()){
+
+        if(spinValue =='1')
+            speed = 255-(speed*255/100.0)
+        else
+            speed = speed*255/100.0;
+        
+        this.setPinMode(11,['PWM']);
+        this.pwmWrite(11,speed);
+        this.setPinMode(10,['digital output']);
+        this.digitalWrite(10,spinValue);      
+    }else
+        {
+        throw new Error(localize("Arduino not connected"));   
+    }
+}
 /*
 /**
  * Sends user to Twiiter Authentication Screen for getting a PIN
@@ -697,6 +743,19 @@ Process.prototype.temperatureProbe = function(pin){
         var celsius = (1/3470)* Math.log(rt/10000) + 1/298;
         celsius = (1/celsius) - 273;
         return  Math.round(celsius*10)/10;         
+    }
+    else{
+        throw new Error(localize("Arduino not connected"));
+    }
+}
+
+
+/****/
+Process.prototype.makersBatteryLevel = function(){
+    var sprite = this.homeContext.receiver;
+    if (sprite.makersIsBoardConnected()) {
+        var adc = this.reportAnalogReading(6);
+        return (12400*5*adc)/(1024*10000);
     }
     else{
         throw new Error(localize("Arduino not connected"));

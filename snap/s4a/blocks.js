@@ -1,134 +1,129 @@
-function pinsSettableToMode(aMode) {
-    // Retrieve a list of pins that support a particular mode
-    var sprite = world.children[0].currentSprite,
-        board = sprite.arduino.board;
-
-    var pinNumbers = {};
-    var pins = board.pins;
-    pins.forEach(
-        function(each){ 
-            if (each.supportedModes.indexOf(aMode) > -1) { 
-                var number = pins.indexOf(each).toString(); 
-                pinNumbers[number] = number;
-            }
-        }
-    );
-    return pinNumbers;
-}
-
-
 // labelPart() proxy
 
 SyntaxElementMorph.prototype.originalLabelPart = SyntaxElementMorph.prototype.labelPart;
-
 SyntaxElementMorph.prototype.labelPart = function(spec) {
-    var part;
+    var part,
+        block = this;
+
     switch (spec) {
         case '%servoValue':
             part = new InputSlotMorph(
-                null,
-                false,
-                {
-                    'angle (0-180)' : 90,
-                    'stopped' : ['stopped'], 
-                    'clockwise' : ['clockwise'],
-                    'counter-clockwise' : ['counter-clockwise']
-                }
-        );
-        break;
+                    null,
+                    false,
+                    {
+                        'angle (0-180)' : 90,
+                        'stopped (1500)' : ['stopped'], 
+                        'clockwise (1500-1000)' : ['clockwise'],
+                        'counter-clockwise (1500-2000)' : ['counter-clockwise'],
+                        'disconnected' : ['disconnected']
+                    }
+                    );
+            break;
         case '%pinMode':
             part = new InputSlotMorph(
-                null,
-                false,
-                {
-                    'digital input' : ['digital input'],
-                    'digital output' : ['digital output'] ,
-                    'PWM' : ['PWM'],
-                    'servo' : ['servo']
-                },
-                true
-        );
-        break;
+                    null,
+                    false,
+                    {
+                        'digital input' : ['digital input'],
+                        'digital output' : ['digital output'] ,
+                        'PWM' : ['PWM'],
+                        'servo' : ['servo']
+                    },
+                    true
+                    );
+            break;
         case '%servoPin':
             part = new InputSlotMorph(
-                null,
-                true,
-                function() { 
-                    // Get board associated to currentSprite
-                    var sprite = world.children[0].currentSprite,
-                        board = sprite.arduino.board;
+                    null,
+                    true,
+                    function() { 
+                        // Get board associated to currentSprite
+                        var sprite = ide.currentSprite,
+                            board = sprite.arduino.board;
 
-                    if (board) {
-                        return pinsSettableToMode(board.MODES.SERVO);
-                    } else {
-                        return [];
+                        if (board) {
+                            return sprite.arduino.pinsSettableToMode(board.MODES.SERVO);
+                        } else {
+                            return [];
+                        }
                     }
-                },
-                true
-        );
-        break;
+                    );
+            break;
         case '%pwmPin':
             part = new InputSlotMorph(
-                null,
-                true,
-                function() { 
-                    // Get board associated to currentSprite
-                    var sprite = world.children[0].currentSprite,
-                        board = sprite.arduino.board;
+                    null,
+                    true,
+                    function() { 
+                        // Get board associated to currentSprite
+                        var sprite = ide.currentSprite,
+                            board = sprite.arduino.board;
 
-                    if (board) {
-                        return pinsSettableToMode(board.MODES.PWM);
-                    } else {
-                        return [];
+                        if (board) {
+                            return sprite.arduino.pinsSettableToMode(board.MODES.PWM);
+                        } else {
+                            return [];
+                        }
                     }
-                },
-                true
-        );
-        break;
+                    );
+            break;
         case '%analogPin':
             part = new InputSlotMorph(
-                null,
-                true,
-                function() { 
-                    // Get board associated to currentSprite
-                    var sprite = world.children[0].currentSprite,
-                        board = sprite.arduino.board;
-
-                    if (board) { 
-                        return board.analogPins.map(function(each){ return (each - board.analogPins[0]).toString() });
-                    } else { 
-                        return [];
-                    } 
-                },
-                true
-        );
-        break;
+                    null,
+                    true,
+                    function() { 
+                        // Get board associated to currentSprite
+                        var sprite = ide.currentSprite,
+                            board = sprite.arduino.board;
+                        
+                        if (board) { 
+                            return board.analogPins.map(
+                                    function (each){
+                                        return (each - board.analogPins[0]).toString();
+                                    });
+                        } else { 
+                            return [];
+                        } 
+                    }
+                    );
+            part.originalChanged = part.changed;
+            part.changed = function () { part.originalChanged(); if (block.toggle) { block.toggle.refresh(); } };
+            break;
         case '%digitalPin':
             part = new InputSlotMorph(
-                null,
-                true,
-                function() {
-                    // Get board associated to currentSprite
-                    var sprite = world.children[0].currentSprite,
-                        board = sprite.arduino.board;
+                    null,
+                    true,
+                    function() {
+                        // Get board associated to currentSprite
+                        var sprite = ide.currentSprite,
+                            board = sprite.arduino.board;
 
-                    if (board) {
-                        var pinNumbers = [];
-                        var pins = board.pins.filter(function(each){ return each.analogChannel == 127 });
-                        pins.forEach(function(each){ pinNumbers.push(pins.indexOf(each).toString()) });
-                        return pinNumbers;
-                    } else {
-                        return [];
+                        if (board) {
+                            var pinNumbers = [],
+                                pins = board.pins.filter(
+                                        function (each){ 
+                                            return each.analogChannel == 127 
+                                        });
+                            
+                            pins.forEach(
+                                    function (each) {
+                                        pinNumbers.push(pins.indexOf(each).toString());
+                                    });
+
+                            return pinNumbers;
+
+                        } else {
+                            return [];
+                        }
                     }
-                },
-                true
-        );
-        break;
+                    );
+            part.originalChanged = part.changed;
+            part.changed = function () { part.originalChanged(); if (block.toggle) { block.toggle.refresh(); } };
+            break;
         default:
             part = this.originalLabelPart(spec);
     }
     return part;
-}
+};
 
 BlockMorph.prototype.userMenu = function () {
     var menu = new MenuMorph(this),
@@ -143,27 +138,28 @@ BlockMorph.prototype.userMenu = function () {
         "help...",
         'showHelp'
     );
+
     if (shiftClicked) {
         top = this.topBlock();
         if (top instanceof ReporterBlockMorph) {
             menu.addItem(
-                "script pic with result...",
-                function () {
-                    top.ExportResultPic();
-                },
-                'open a new window\n' +
+                    "script pic with result...",
+                    function () {
+                        top.ExportResultPic();
+                    },
+                    'open a new window\n' +
                     'with a picture of both\nthis script and its result',
-                new Color(100, 0, 0)
-            );
+                    new Color(100, 0, 0)
+                    );
         }
     }
     if (this.isTemplate) {
         if (!(this.parent instanceof SyntaxElementMorph)) {
             if (this.selector !== 'evaluateCustomBlock') {
                 menu.addItem(
-                    "hide",
-                    'hidePrimitive'
-                );
+                        "hide",
+                        'hidePrimitive'
+                        );
             }
         }
         return menu;
@@ -174,64 +170,46 @@ BlockMorph.prototype.userMenu = function () {
         blck = this.fullCopy();
         blck.addShadow();
         menu.addItem(
-            'rename...',
-            function () {
-                new DialogBoxMorph(
-                    myself,
-                    myself.setSpec,
-                    myself
-                ).prompt(
-                    "Variable name",
-                    myself.blockSpec,
-                    world,
-                    blck.fullImage(), // pic
-                    InputSlotMorph.prototype.getVarNamesDict.call(myself)
+                'rename...',
+                function () {
+                    new DialogBoxMorph(
+                            myself,
+                            myself.setSpec,
+                            myself
+                            ).prompt(
+                                "Variable name",
+                                myself.blockSpec,
+                                world,
+                                blck.fullImage(), // pic
+                                InputSlotMorph.prototype.getVarNamesDict.call(myself)
+                                );
+                }
                 );
-            }
-        );
     } else if (SpriteMorph.prototype.blockAlternatives[this.selector]) {
         menu.addItem(
-            'relabel...',
-            function () {
-                myself.relabel(
-                    SpriteMorph.prototype.blockAlternatives[myself.selector]
+                'relabel...',
+                function () {
+                    myself.relabel(
+                            SpriteMorph.prototype.blockAlternatives[myself.selector]
+                            );
+                }
                 );
-            }
-        );
     } else if (this.definition && this.alternatives) { // custom block
         alternatives = this.alternatives();
         if (alternatives.length > 0) {
             menu.addItem(
-                'relabel...',
-                function () {myself.relabel(alternatives); }
-            );
+                    'relabel...',
+                    function () { myself.relabel(alternatives); }
+                    );
         }
     }
 
     menu.addItem(
-        "duplicate",
-        function () {
-            var dup = myself.fullCopy(),
-                ide = myself.parentThatIsA(IDE_Morph);
-            dup.pickUp(world);
-            if (ide) {
-                world.hand.grabOrigin = {
-                    origin: ide.palette,
-                    position: ide.palette.center()
-                };
-            }
-        },
-        'make a copy\nand pick it up'
-    );
-    if (this instanceof CommandBlockMorph && this.nextBlock()) {
-        menu.addItem(
-            this.thumbnail(0.5, 60, false),
+            "duplicate",
             function () {
-                var cpy = this.fullCopy(),
-                    nb = cpy.nextBlock(),
-                    ide = myself.parentThatIsA(IDE_Morph);
-                if (nb) {nb.destroy(); }
-                cpy.pickUp(world);
+                var dup = myself.fullCopy(),
+                ide = myself.parentThatIsA(IDE_Morph);
+                dup.pickUp(world);
                 if (ide) {
                     world.hand.grabOrigin = {
                         origin: ide.palette,
@@ -239,20 +217,38 @@ BlockMorph.prototype.userMenu = function () {
                     };
                 }
             },
-            'only duplicate this block'
-        );
+            'make a copy\nand pick it up'
+            );
+    if (this instanceof CommandBlockMorph && this.nextBlock()) {
+        menu.addItem(
+                this.thumbnail(0.5, 60, false),
+                function () {
+                    var cpy = this.fullCopy(),
+                    nb = cpy.nextBlock(),
+                    ide = myself.parentThatIsA(IDE_Morph);
+                    if (nb) {nb.destroy(); }
+                    cpy.pickUp(world);
+                    if (ide) {
+                        world.hand.grabOrigin = {
+                            origin: ide.palette,
+                            position: ide.palette.center()
+                        };
+                    }
+                },
+                'only duplicate this block'
+                );
     }
     menu.addItem(
-        "delete",
-        'userDestroy'
-    );
+            "delete",
+            'userDestroy'
+            );
     menu.addItem(
-        "script pic...",
-        function () {
-            window.open(myself.topBlock().fullImage().toDataURL());
-        },
-        'open a new window\nwith a picture of this script'
-    );
+            "script pic...",
+            function () {
+                window.open(myself.topBlock().fullImage().toDataURL());
+            },
+            'open a new window\nwith a picture of this script'
+            );
     if (this.parentThatIsA(RingMorph)) {
         menu.addLine();
         menu.addItem("unringify", 'unringify');
@@ -263,9 +259,9 @@ BlockMorph.prototype.userMenu = function () {
     if (StageMorph.prototype.enableCodeMapping && this.selector == 'receiveGo') {
         menu.addLine();
         menu.addItem(
-            'export as Arduino sketch...',
-            'exportAsArduinoC'
-        );
+                'export as Arduino sketch...',
+                'exportAsProcessing'
+                );
     }
 
     if (this.parent instanceof ReporterSlotMorph
@@ -281,14 +277,15 @@ BlockMorph.prototype.userMenu = function () {
     return menu;
 };
 
-BlockMorph.prototype.exportAsArduinoC = function () {
+BlockMorph.prototype.exportAsProcessing = function () {
     var fs = require('fs'),
-        ide = this.parentThatIsA(IDE_Morph),
-        fileName = homePath() + (ide.projectName ? ide.projectName.replace(/[^a-zA-Z]/g,'') : 'snap4arduino') + '.ino';
-
+        ide = this.parentThatIsA(IDE_Morph);
     try {
-        fs.writeFileSync(fileName, this.world().Arduino.processC(this.mappedCode()));
-        ide.showMessage('Exported as ' + fileName, 1);
+        saveFile(
+                ide.projectName ? ide.projectName.replace(/[^a-zA-Z]/g,'') : 'snap4arduino',
+                this.world().Arduino.processProcessing(this.mappedCode()),
+                '.ino',
+                ide);
     } catch (error) {
         ide.inform('Error exporting to Arduino sketch!', error.message)
     }

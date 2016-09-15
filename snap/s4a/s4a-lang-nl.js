@@ -42,10 +42,10 @@ s4aTempDict = {
 
     // arduino:
 	'digital input':
-		'digitální vstup',
+		'digitale ingang',
 
 	'digital output':
-		'digitální výstup',
+		'digitale uitgang',
 
 	'PWM':
 		'PWM',
@@ -54,84 +54,87 @@ s4aTempDict = {
 		'servo',
 
 	'clockwise (1500-1000)':
-		'po směru hodin (1500-1000)',
+		'rechtsom (1500-1000)',
 
-	'counter-clockwise (1500-2000)':
-		'proti směru hodin (1500-2000)',
+	'counter-clockwise  (1500-2000)':
+		'linksom (1500-2000)',
 
 	'stopped (1500)':
-		'zastaveno (1500)',
+		'gestopt (1500)',
 
 	'angle (0-180)':
-		'úhel (0-180)',
+		'hoek (0-180)',
 
     'connect to Arduino':
-        'připojit Arduino',
+        'maak verbinding met Arduino',
 
     'disconnect Arduino':
-        'odpojit Arduino',
+        'verbreek verbinding met Arduino',
 
 	'Connect Arduino':
-        'Připojit Arduino',
+        'verbinding maken',
 
     'Disconnect Arduino':
-        'Odpojit Arduino',
+        'verbinding verbreken',
 
     'analog reading %analogPin':
-        'analogový vstup %analogPin',
+        'lees analoge pin %analogPin uit',
 
     'digital reading %digitalPin':
-        'digitální vstup %digitalPin',
+        'lees digitale pin %digitalPin uit',
 
     'connect arduino at %port':
-        'připojit Arduino na portu %port',
+        'verbind Arduino met %port',
 
     'setup digital pin %digitalPin as %pinMode':
-        'nastav digitální pin %digitalPin jako %pinMode',
+        'stel digitale pin %digitalPin in als %pinMode',
 
     'set digital pin %digitalPin to %b':
-        'nastav digitální pin %digitalPin na %b',
+        'zet digitale pin %digitalPin op %b',
 
     'set servo %servoPin to %servoValue':
-        'nastav servo %servoPin na %servoValue',
+        'zet servo %servoPin op %servoValue',
 
     'set analog pin %pwmPin to %n':
-        'nastav PWM pin %pwmPin na %n',
+        'zet analoge pin %pwmPin op %n',
 
     'Connecting board at port\n': 
-        'Připojuji desku na port\n',
+        'Verbinding maken op poort\n',
 
     'An Arduino board has been connected. Happy prototyping!':
-        'Deska Arduino byla připojena. Veselé prototypování!',
+        'Een Arduino is verbonden. Veel prototyping-plezier!',
 
     'Board was disconnected from port\n':
-        'Deska byla odpojena od portu\n',
+        'De verbinding is verbroken op poort\n',
 
     'It seems that someone pulled the cable!':
-        'Zdá se, že někdo vytáhl kabel!',
+        'Blijkbaar heeft iemand de kabel eruit getrokken!',
 
     'Error connecting the board.':
-        'Chyba při připojení k desce.',
+        'Fout bij het maken van de verbinding.',
 
     'There is already a board connected to this sprite':
-        'K tomuto sprite je již deska připojena',
+        'Er is al een verbinding voor deze sprite',
 
     'Could not connect an Arduino\nNo boards found':
-        'Nezdařilo se připojení k Arduinu\nNenalezena žádná deska',
+        'Het is niet gelukt om verbinding te maken met de Arduino\nEr is geen Arduino gevonden',
 
     'Could not talk to Arduino in port\n':
-        'Komunikace s Arduinem se nedaří na portu\n',
+        'Er is geen communicatie mogelijk op poort\n',
 
     'Check if firmata is loaded.':
-        'Zkontrolujte, zda je na desce nahrána Firmata.',
+        'Controleer of Firmata is geladen.',
 
     'An error was detected on the board\n\n':
-        'Detekována chyba na desce\n\n',
+        'Er is een fout opgetreden in de Arduino\n\n',
 
     'Board is not connected':
-        'Deska není připojena'
+        'Arduino is niet verbonden',
+		
+	'New Arduino translatable project':
+		'Nieuw Arduino-project maken'
 
 };
 
-// Add attributes to original SnapTranslator.dict.de
-for (var attrname in s4aTempDict) { SnapTranslator.dict.cs[attrname] = s4aTempDict[attrname]; }
+// Add attributes to original SnapTranslator.dict.nl
+for (var attrname in s4aTempDict) { SnapTranslator.dict.nl[attrname] = s4aTempDict[attrname]; }

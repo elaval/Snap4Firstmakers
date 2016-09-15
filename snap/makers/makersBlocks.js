@@ -129,6 +129,19 @@ function overridenLabelPart(spec) {
             );
             part.setContents('50');
             break;
+        case '%servoPinV2':    
+            part = new InputSlotMorph(
+                null,
+                true,
+                {
+                    'Primary':'Primary',
+                    'D0':'D0',
+                    'D1':'D1',
+                    'D2':'D2',
+                }
+            );
+            part.setContents('D0');
+            break;
         case '%actuatorPinV2':    
             part = new InputSlotMorph(
                 null,

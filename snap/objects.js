@@ -9,7 +9,7 @@
     written by Jens Mönig
     jens@moenig.org
 
-    Copyright (C) 2015 by Jens Mönig
+    Copyright (C) 2016 by Jens Mönig
 
     This file is part of Snap!.
 
@@ -65,67 +65,24 @@
 
 */
 
-// globals from paint.js:
-/*global PaintEditorMorph*/
-
-// globals from lists.js:
-
-/*global ListWatcherMorph*/
-
-// gloabls from widgets.js:
-
-/*global PushButtonMorph, ToggleMorph, DialogBoxMorph, InputFieldMorph*/
-
-// gloabls from gui.js:
-
-/*global WatcherMorph, SpriteIconMorph*/
-
-// globals from threads.js:
-
-/*global ArgMorph, BlockMorph, Process, StackFrame, ThreadManager,
-VariableFrame, detect, threadsVersion*/
-
-// globals from blocks.js:
-
-/*global ArgMorph, ArrowMorph, BlockHighlightMorph, BlockMorph,
-BooleanSlotMorph, BoxMorph, Color, ColorPaletteMorph, ColorSlotMorph,
-CommandBlockMorph, CommandSlotMorph, FrameMorph, HatBlockMorph,
-InputSlotMorph, MenuMorph, Morph, MultiArgMorph, Point,
-ReporterBlockMorph, ScriptsMorph, ShaAwMorph, StringMorph,
-SyntaxElementMorph, TextMorph, WorldMorph, blocksVersion, contains,
-degrees, detect, getDocumentPositionOf, newCanvas, nop, radians,
-useBlurredShadows*/
-
-// globals from morphic.js:
-
-/*global Array, BlinkerMorph, BouncerMorph, BoxMorph, CircleBoxMorph,
-Color, ColorPaletteMorph, ColorPickerMorph, CursorMorph, Date,
-FrameMorph, Function, GrayPaletteMorph, HandMorph, HandleMorph,
-InspectorMorph, ListMorph, Math, MenuItemMorph, MenuMorph, Morph,
-MorphicPreferences, MouseSensorMorph, Node, Object, PenMorph, Point,
-Rectangle, ScrollFrameMorph, ShadowMorph, SliderButtonMorph,
-SliderMorph, String, StringFieldMorph, StringMorph, TextMorph,
-TriggerMorph, WorldMorph, contains, copy, degrees, detect,
-document, getDocumentPositionOf, isNaN, isObject, isString, newCanvas,
-nop, parseFloat, radians, standardSettings, touchScreenSettings,
-useBlurredShadows, version, window, modules, IDE_Morph, VariableDialogMorph,
-HTMLCanvasElement, Context, List, SpeechBubbleMorph, RingMorph, isNil,
-FileReader*/
-
-// globals from byob.js:
-
-/*global CustomBlockDefinition, BlockEditorMorph, BlockDialogMorph,
-PrototypeHatBlockMorph*/
-
-// globals from locale.js:
-
-/*global localize*/
-
-// temporary globals
-
 // Global stuff ////////////////////////////////////////////////////////
 
-modules.objects = '2015-November-16';
+/*global PaintEditorMorph, ListWatcherMorph, PushButtonMorph, ToggleMorph,
+DialogBoxMorph, InputFieldMorph, SpriteIconMorph, BlockMorph,
+ThreadManager, VariableFrame, detect, BlockMorph, BoxMorph, Color,
+CommandBlockMorph, FrameMorph, HatBlockMorph, MenuMorph, Morph, MultiArgMorph,
+Point, ReporterBlockMorph, ScriptsMorph, StringMorph, SyntaxElementMorph,
+TextMorph, contains, degrees, detect, newCanvas, nop, radians, Array,
+CursorMorph, Date, FrameMorph, HandMorph, Math, MenuMorph, Morph,
+MorphicPreferences, Object, PenMorph, Point, Rectangle, ScrollFrameMorph,
+SliderMorph, String, StringMorph, TextMorph, contains, copy, degrees, detect,
+document, isNaN, isString, newCanvas, nop, parseFloat, radians, window,
+modules, IDE_Morph, VariableDialogMorph, HTMLCanvasElement, Context, List,
+SpeechBubbleMorph, RingMorph, isNil, FileReader, TableDialogMorph,
+BlockEditorMorph, BlockDialogMorph, PrototypeHatBlockMorph, localize,
+TableMorph, TableFrameMorph*/
+
+modules.objects = '2016-March-16';
 
 var SpriteMorph;
 var StageMorph;
@@ -569,6 +526,12 @@ SpriteMorph.prototype.initBlocks = function () {
             category: 'pen',
             spec: 'stamp'
         },
+        floodFill: {
+            only: SpriteMorph,
+            type: 'command',
+            category: 'pen',
+            spec: 'fill'
+        },
 
         // Control
         receiveGo: {
@@ -583,7 +546,7 @@ SpriteMorph.prototype.initBlocks = function () {
         },
 
     /* migrated to a newer block version:
-  
+
         receiveClick: {
             type: 'hat',
             category: 'control',
@@ -601,6 +564,11 @@ SpriteMorph.prototype.initBlocks = function () {
             type: 'hat',
             category: 'control',
             spec: 'when I receive %msgHat'
+        },
+        receiveCondition: {
+            type: 'hat',
+            category: 'control',
+            spec: 'when %b'
         },
         doBroadcast: {
             type: 'command',
@@ -1186,6 +1154,15 @@ SpriteMorph.prototype.initBlocks = function () {
             category: 'lists',
             spec: 'for %upvar in %l %cl',
             defaults: [localize('each item')]
+        },
+
+        // Tables - experimental
+
+        doShowTable: {
+            dev: true,
+            type: 'command',
+            category: 'lists',
+            spec: 'show table %l'
         },
 
         // Code mapping - experimental
@@ -1861,12 +1838,14 @@ SpriteMorph.prototype.blockTemplates = function (category) {
         blocks.push(block('setSize'));
         blocks.push('-');
         blocks.push(block('doStamp'));
+        blocks.push(block('floodFill'));
 
     } else if (cat === 'control') {
 
         blocks.push(block('receiveGo'));
         blocks.push(block('receiveKey'));
         blocks.push(block('receiveInteraction'));
+        blocks.push(block('receiveCondition'));
         blocks.push(block('receiveMessage'));
         blocks.push('-');
         blocks.push(block('doBroadcast'));
@@ -2127,6 +2106,7 @@ SpriteMorph.prototype.blockTemplates = function (category) {
             blocks.push(block('reportMap'));
             blocks.push('-');
             blocks.push(block('doForEach'));
+            blocks.push(block('doShowTable'));
         }
 
     /////////////////////////////////
@@ -2443,7 +2423,7 @@ SpriteMorph.prototype.blocksMatching = function (
 
     // variable getters
     varNames.forEach(function (vName) {
-        var rel = relevance(labelOf(vName), search);
+        var rel = relevance(labelOf(vName.toLowerCase()), search);
         if (rel !== -1) {
             blocks.push([myself.variableBlock(vName), rel + '1']);
         }
@@ -3311,6 +3291,10 @@ SpriteMorph.prototype.isCorrectingOutsideDrag = function () {
 };
 
 SpriteMorph.prototype.justDropped = function () {
+    var stage = this.parentThatIsA(StageMorph);
+    if (stage) {
+        stage.enableCustomHatBlocks = true;
+    }
     this.restoreLayers();
     this.positionTalkBubble();
     this.receiveUserInteraction('dropped');
@@ -3348,6 +3332,60 @@ SpriteMorph.prototype.drawLine = function (start, dest) {
             this.world().broken.push(damaged);
         }
     }
+};
+
+SpriteMorph.prototype.floodFill = function () {
+    var layer = this.parent.penTrails(),
+        width = layer.width,
+        height = layer.height,
+        ctx = layer.getContext('2d'),
+        img = ctx.getImageData(0, 0, width, height),
+        dta = img.data,
+        stack = [
+            ((height / 2) - Math.round(this.yPosition())) * width +
+            Math.round(this.xPosition() + (width / 2))
+        ],
+        current,
+        src;
+
+    function read(p) {
+        var d = p * 4;
+        return [dta[d], dta[d + 1], dta[d + 2], dta[d + 3]];
+    }
+
+    function check(p) {
+        return p[0] === src[0] &&
+            p[1] === src[1] &&
+            p[2] === src[2] &&
+            p[3] === src[3];
+    }
+
+    src = read(stack[0]);
+    if (src[0] === Math.round(this.color.r) &&
+            src[1] === Math.round(this.color.g) &&
+            src[2] === Math.round(this.color.b) &&
+            src[3] === Math.round(this.color.a * 255)) {
+        return;
+    }
+    while (stack.length > 0) {
+        current = stack.pop();
+        if (check(read(current))) {
+            if (current % width > 1) {
+                stack.push(current + 1);
+                stack.push(current - 1);
+            }
+            if (current > 0 && current < height * width) {
+                stack.push(current + width);
+                stack.push(current - width);
+            }
+        }
+        dta[current * 4] = Math.round(this.color.r);
+        dta[current * 4 + 1] = Math.round(this.color.g);
+        dta[current * 4 + 2] = Math.round(this.color.b);
+        dta[current * 4 + 3] = Math.round(this.color.a * 255);
+    }
+    ctx.putImageData(img, 0, 0);
+    this.parent.changed();
 };
 
 // SpriteMorph motion - adjustments due to nesting
@@ -3466,10 +3504,14 @@ SpriteMorph.prototype.setHeading = function (degrees) {
         turn = dir - this.heading;
 
     // apply to myself
-    this.changed();
-    SpriteMorph.uber.setHeading.call(this, dir);
-    this.silentGotoXY(x, y, true); // just me
-    this.positionTalkBubble();
+    if (this.rotationStyle) { // optimization, only redraw if rotatable
+        this.changed();
+        SpriteMorph.uber.setHeading.call(this, dir);
+        this.silentGotoXY(x, y, true); // just me
+        this.positionTalkBubble();
+    } else {
+        this.heading = parseFloat(degrees) % 360;
+    }
 
     // propagate to my parts
     this.parts.forEach(function (part) {
@@ -3675,7 +3717,7 @@ SpriteMorph.prototype.allHatBlocksForKey = function (key) {
         if (morph.selector) {
             if (morph.selector === 'receiveKey') {
                 var evt = morph.inputs()[0].evaluate()[0];
-                return evt === key || evt === 'any';
+                return evt === key || evt === 'any key';
             }
         }
         return false;
@@ -3688,6 +3730,15 @@ SpriteMorph.prototype.allHatBlocksForInteraction = function (interaction) {
             if (morph.selector === 'receiveInteraction') {
                 return morph.inputs()[0].evaluate()[0] === interaction;
             }
+        }
+        return false;
+    });
+};
+
+SpriteMorph.prototype.allGenericHatBlocks = function () {
+    return this.scripts.children.filter(function (morph) {
+        if (morph.selector) {
+            return morph.selector === 'receiveCondition';
         }
         return false;
     });
@@ -4674,8 +4725,8 @@ StageMorph.prototype.hiddenPrimitives = {};
 StageMorph.prototype.codeMappings = {};
 StageMorph.prototype.codeHeaders = {};
 StageMorph.prototype.enableCodeMapping = false;
-
 StageMorph.prototype.enableInheritance = false;
+StageMorph.prototype.enableSublistIDs = false;
 
 // StageMorph instance creation
 
@@ -4695,6 +4746,7 @@ StageMorph.prototype.init = function (globals) {
     this.sounds = new List();
     this.version = Date.now(); // for observers
     this.isFastTracked = false;
+    this.enableCustomHatBlocks = true;
     this.cloneCount = 0;
 
     this.timerStart = Date.now();
@@ -5036,6 +5088,9 @@ StageMorph.prototype.step = function () {
     }
 
     // manage threads
+    if (this.enableCustomHatBlocks) {
+        this.stepGenericConditions();
+    }
     if (this.isFastTracked && this.threads.processes.length) {
         this.children.forEach(function (morph) {
             if (morph instanceof SpriteMorph) {
@@ -5070,6 +5125,28 @@ StageMorph.prototype.step = function () {
         });
         this.lastWatcherUpdate = Date.now();
     }
+};
+
+StageMorph.prototype.stepGenericConditions = function (stopAll) {
+    var hats = [],
+        myself = this,
+        ide;
+    this.children.concat(this).forEach(function (morph) {
+        if (morph instanceof SpriteMorph || morph instanceof StageMorph) {
+            hats = hats.concat(morph.allGenericHatBlocks());
+        }
+    });
+    if (!hats.length) {
+        this.enableCustomHatBlocks = false;
+        ide = this.parentThatIsA(IDE_Morph);
+        if (ide) {
+            ide.controlBar.stopButton.refresh();
+        }
+        return;
+    }
+    hats.forEach(function (block) {
+        myself.threads.doWhen(block, stopAll);
+    });
 };
 
 StageMorph.prototype.developersMenu = function () {
@@ -5430,6 +5507,7 @@ StageMorph.prototype.blockTemplates = function (category) {
         blocks.push(block('receiveGo'));
         blocks.push(block('receiveKey'));
         blocks.push(block('receiveInteraction'));
+        blocks.push(block('receiveCondition'));
         blocks.push(block('receiveMessage'));
         blocks.push('-');
         blocks.push(block('doBroadcast'));
@@ -5667,6 +5745,7 @@ StageMorph.prototype.blockTemplates = function (category) {
             blocks.push(block('reportMap'));
             blocks.push('-');
             blocks.push(block('doForEach'));
+            blocks.push(block('doShowTable'));
         }
 
     /////////////////////////////////
@@ -5737,7 +5816,11 @@ StageMorph.prototype.userMenu = function () {
     menu.addItem(
         "pic...",
         function () {
-            window.open(myself.fullImageClassic().toDataURL());
+            ide.saveCanvasAs(
+                myself.fullImageClassic(),
+                myself.name,
+                true // open as new window
+            );
         },
         'open a new window\nwith a picture of the stage'
     );
@@ -5984,6 +6067,9 @@ StageMorph.prototype.allHatBlocksForKey
 StageMorph.prototype.allHatBlocksForInteraction
     = SpriteMorph.prototype.allHatBlocksForInteraction;
 
+StageMorph.prototype.allGenericHatBlocks
+    = SpriteMorph.prototype.allGenericHatBlocks;
+
 // StageMorph events
 
 StageMorph.prototype.mouseClickLeft
@@ -6085,7 +6171,7 @@ SpriteBubbleMorph.prototype.init = function (
 
 // SpriteBubbleMorph contents formatting
 
-SpriteBubbleMorph.prototype.dataAsMorph = function (data) {
+SpriteBubbleMorph.prototype.dataAsMorph = function (data, toggle) {
     var contents,
         sprite = SpriteMorph.prototype,
         isText,
@@ -6123,15 +6209,24 @@ SpriteBubbleMorph.prototype.dataAsMorph = function (data) {
         contents.silentSetHeight(data.height);
         contents.image = data;
     } else if (data instanceof List) {
-        contents = new ListWatcherMorph(data);
-        contents.isDraggable = false;
-        contents.update(true);
-        contents.step = contents.update;
-        if (this.stage) {
-            contents.expand(this.stage.extent().translateBy(
-                -2 * (this.edge + this.border + this.padding)
-            ));
+        if (!toggle && data.isTable()) {
+            contents = new TableFrameMorph(new TableMorph(data, 10));
+            if (this.stage) {
+                contents.expand(this.stage.extent().translateBy(
+                    -2 * (this.edge + this.border + this.padding)
+                ));
+            }
+        } else {
+            contents = new ListWatcherMorph(data);
+            contents.update(true);
+            contents.step = contents.update;
+            if (this.stage) {
+                contents.expand(this.stage.extent().translateBy(
+                    -2 * (this.edge + this.border + this.padding)
+                ));
+            }
         }
+        contents.isDraggable = false;
     } else if (data instanceof Context) {
         img = data.image();
         contents = new Morph();
@@ -6185,7 +6280,7 @@ SpriteBubbleMorph.prototype.setScale = function (scale) {
 
 // SpriteBubbleMorph drawing:
 
-SpriteBubbleMorph.prototype.drawNew = function () {
+SpriteBubbleMorph.prototype.drawNew = function (toggle) {
     var sprite = SpriteMorph.prototype;
 
     // scale my settings
@@ -6197,7 +6292,7 @@ SpriteBubbleMorph.prototype.drawNew = function () {
     if (this.contentsMorph) {
         this.contentsMorph.destroy();
     }
-    this.contentsMorph = this.dataAsMorph(this.data);
+    this.contentsMorph = this.dataAsMorph(this.data, toggle);
     this.add(this.contentsMorph);
 
     // adjust my layout
@@ -6330,11 +6425,10 @@ Costume.prototype.shrinkWrap = function () {
     this.version = Date.now();
 };
 
-Costume.prototype.boundingBox = function () {
+Costume.prototype.canvasBoundingBox = function (pic) {
     // answer the rectangle surrounding my contents' non-transparent pixels
     var row,
         col,
-        pic = this.contents,
         w = pic.width,
         h = pic.height,
         ctx = pic.getContext('2d'),
@@ -6389,6 +6483,10 @@ Costume.prototype.boundingBox = function () {
     }
 
     return new Rectangle(getLeft(), getTop(), getRight(), getBottom());
+};
+
+Costume.prototype.boundingBox = function () {
+    return this.canvasBoundingBox(this.contents);
 };
 
 // Costume duplication
@@ -6914,24 +7012,26 @@ CellMorph.prototype.fixLayout = function () {
 
 // CellMorph drawing:
 
-CellMorph.prototype.drawNew = function () {
+CellMorph.prototype.drawNew = function (toggle, type) {
     var context,
         txt,
         img,
         fontSize = SyntaxElementMorph.prototype.fontSize,
         isSameList = this.contentsMorph instanceof ListWatcherMorph
-                && (this.contentsMorph.list === this.contents);
+                && (this.contentsMorph.list === this.contents),
+        isSameTable = this.contentsMorph instanceof TableFrameMorph
+                && (this.contentsMorph.tableMorph.table === this.contents);
 
     if (this.isBig) {
         fontSize = fontSize * 1.5;
     }
 
     // re-build my contents
-    if (this.contentsMorph && !isSameList) {
+    if (toggle || (this.contentsMorph && !isSameList && !isSameTable)) {
         this.contentsMorph.destroy();
     }
 
-    if (!isSameList) {
+    if (toggle || (!isSameList && !isSameTable)) {
         if (this.contents instanceof Morph) {
             this.contentsMorph = this.contents;
         } else if (isString(this.contents)) {
@@ -6977,23 +7077,31 @@ CellMorph.prototype.drawNew = function () {
             this.contentsMorph.silentSetHeight(img.height);
             this.contentsMorph.image = img;
         } else if (this.contents instanceof List) {
-            if (this.isCircular()) {
-                this.contentsMorph = new TextMorph(
-                    '(...)',
-                    fontSize,
-                    null,
-                    false, // bold
-                    true, // italic
-                    'center'
-                );
-                this.contentsMorph.setColor(new Color(255, 255, 255));
-            } else {
-                this.contentsMorph = new ListWatcherMorph(
+            if ('table' === type || (!toggle && this.contents.isTable())) {
+                this.contentsMorph = new TableFrameMorph(new TableMorph(
                     this.contents,
-                    this
-                );
-                this.contentsMorph.isDraggable = false;
+                    10
+                ));
+                this.contentsMorph.expand(new Point(200, 150));
+            } else {
+                if (this.isCircular()) {
+                    this.contentsMorph = new TextMorph(
+                        '(...)',
+                        fontSize,
+                        null,
+                        false, // bold
+                        true, // italic
+                        'center'
+                    );
+                    this.contentsMorph.setColor(new Color(255, 255, 255));
+                } else {
+                    this.contentsMorph = new ListWatcherMorph(
+                        this.contents,
+                        this
+                    );
+                }
             }
+            this.contentsMorph.isDraggable = false;
         } else {
             this.contentsMorph = new TextMorph(
                 !isNil(this.contents) ? this.contents.toString() : '',
@@ -7055,7 +7163,7 @@ CellMorph.prototype.drawNew = function () {
     }
 
     // position my contents
-    if (!isSameList) {
+    if (toggle || (!isSameList && !isSameTable)) {
         this.contentsMorph.setCenter(this.center());
     }
 };
@@ -7166,6 +7274,15 @@ CellMorph.prototype.mouseClickLeft = function (pos) {
         this.contentsMorph.selectAllAndEdit();
     } else {
         this.escalateEvent('mouseClickLeft', pos);
+    }
+};
+
+CellMorph.prototype.mouseDoubleClick = function (pos) {
+    if (List.prototype.enableTables &&
+            this.currentValue instanceof List) {
+        new TableDialogMorph(this.contents).popUp(this.world());
+    } else {
+        this.escalateEvent('mouseDoubleClick', pos);
     }
 };
 
@@ -7464,6 +7581,15 @@ WatcherMorph.prototype.fixLayout = function () {
 
 // WatcherMorph events:
 
+WatcherMorph.prototype.mouseDoubleClick = function (pos) {
+    if (List.prototype.enableTables &&
+            this.currentValue instanceof List) {
+        new TableDialogMorph(this.currentValue).popUp(this.world());
+    } else {
+        this.escalateEvent('mouseDoubleClick', pos);
+    }
+};
+
 /*
 // Scratch-like watcher-toggling, commented out b/c we have a drop-down menu
 
@@ -7621,9 +7747,11 @@ WatcherMorph.prototype.userMenu = function () {
             menu.addItem(
                 'export...',
                 function () {
-                    window.open(
-                        'data:text/plain;charset=utf-8,' +
-                            encodeURIComponent(this.currentValue.toString())
+                    var ide = myself.parentThatIsA(IDE_Morph);
+                    ide.saveFileAs(
+                        myself.currentValue.toString(),
+                        'text/plain;charset=utf-8',
+                        myself.getter // variable name
                     );
                 }
             );

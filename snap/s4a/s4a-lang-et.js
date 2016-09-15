@@ -1,3 +1,4 @@
+
 s4aTempDict = {
 
     /*
@@ -43,10 +44,10 @@ s4aTempDict = {
     // arduino:
 
     'digital input':
-        'entrada digital',
+        'digitaalne sisend',
 
     'digital output':
-        'sortida digital',
+        'digitaalne väljund',
 
     'PWM':
         'PWM',
@@ -55,90 +56,93 @@ s4aTempDict = {
         'servo',
 
     'clockwise (1500-1000)':
-        'sentit horari (1500-1000)',
+        'päripäeva (1500-1000)',
 
     'counter-clockwise (1500-2000)':
-        'sentit anti-horari (1500-2000)',
+        'vastupäeva (1500-2000)',
 
-    'stopped':
-        'aturat (1500)',
+    'stopped (1500)':
+        'peatatud (1500)',
 
     'disconnected':
-        'desconnectat',
+        'ühendus katkestatud',
 
     'angle (0-180)':
-        'angle (0-180)',
+        'nurk (0-180)',
 
     'connect to Arduino':
-        'connectar a Arduino',
+        'ühenda Arduino',
 
     'disconnect Arduino':
-        'desconnectar Arduino',
+        'katkesta ühendus Arduinoga',
 
     'Connect Arduino':
-        'Connectar Arduino',
+        'Ühenda Arduino',
 
     'Disconnect Arduino':
-        'Desconnectar Arduino',
+        'Katkesta ühendus Arduinoga',
 
     'analog reading %analogPin':
-        'lectura analògica %analogPin',
+        'analooglugem viigult %analogPin',
 
     'digital reading %digitalPin':
-        'lectura digital %digitalPin',
+        'digitaallugem viigult %digitalPin',
 
     'connect arduino at %port':
-        'connectar arduino al port %port',
+        'tekita ühendus arduinoga pordis %port',
 
     'setup digital pin %digitalPin as %pinMode':
-        'configurar pin %digitalPin com a %pinMode',
+        'määra digitaalviigu %digitalPin režiimiks %pinMode',
 
     'set digital pin %digitalPin to %b':
-        'posar pin digital %digitalPin a %b',
+        'määra digitaalviigule %digitalPin väärtus %b',
 
     'set servo %servoPin to %servoValue':
-        'posar servo %servoPin a %servoValue',
+        'määra servoviigule %servoPin väärtus %servoValue',
 
     'set analog pin %pwmPin to %n':
-        'posar pin analògic %pwmPin a %n',
+        'määra analoogviigule %pwmPin väärtus %n',
 
     'Connecting board at port\n': 
-        'Connectant placa al port\n',
+        'Ühenduse loomine plaadiga pordis\n',
 
     'An Arduino board has been connected. Happy prototyping!':
-        'S\'ha connectat correctament una placa Arduino.\nFeliç prototipatge!',
+        'Arduino plaat on ühendatud. Jõudu tööle!',
 
     'Board was disconnected from port\n':
-        'S\'ha desconnectat la placa del port\n',
+        'Plaat eemaldati pordist\n',
 
     'It seems that someone pulled the cable!':
-        'Sembla que algú ha desconnectat el cable!',
+        'Paistab, et keegi tõmbas kaabli välja.',
 
     'Error connecting the board.':
-        'Error en connectar a la placa',
+        'Viga plaadiga ühenduse loomisel.',
 
     'There is already a board connected to this sprite':
-        'Aquest objecte ja té una placa connectada',
+        'Selle spraidiga on juba plaat seotud.',
 
     'Could not connect an Arduino\nNo boards found':
-        'No s\'ha pogut connectar cap Arduino\nNo s\'ha trobat cap placa',
+        'Arduinoga ei saadud ühendust.\nPlaate ei leitud.',
 
     'Could not talk to Arduino in port\n':
-        'No s\'ha pogut establir comunicació amb Arduino al port\n',
+        'Arduinoga suhtlemine ei õnnestu pordis\n',
 
     'Check if firmata is loaded.':
-        'Reviseu que Firmata hi estigui carregat.',
+        'Veendu, et firmata oleks laaditud.',
 
     'An error was detected on the board\n\n':
-        'S\'ha detectat un error a la placa\n\n',
+        'Viga plaadil\n\n',
 
     'Board is not connected':
-        'La placa no està connectada',
+        'Plaat pole ühendatud',
 
     'New Arduino translatable project':
-        'Nou projecte traduïble a Arduino' 
+        'Uus tõlgitav Arduino projekt' 
 
 };
 
-// Add attributes to original SnapTranslator.dict.ca
-for (var attrname in s4aTempDict) { SnapTranslator.dict.ca[attrname] = s4aTempDict[attrname]; }
+// Please change the LANG keyword in the lines below by your locale's two-digit code in lowercase,
+// like en for English, ca for Catalan, zh for Mandarin or de for German.
+
+// Add attributes to original SnapTranslator.dict.LANG
+for (var attrname in s4aTempDict) { SnapTranslator.dict.et[attrname] = s4aTempDict[attrname]; }

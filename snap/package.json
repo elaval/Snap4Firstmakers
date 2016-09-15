@@ -1,15 +1,13 @@
 {
-   "node-main": "", 
-    "js-flags": "", 
-    "name": "snap4firstmakers", 
-    "single-instance": true, 
-    "nodejs": true, 
-    "chromium-args": "", 
-    "additional_trust_anchors": [], 
-    "user-agent": "", 
-    "inject-js-end": "", 
-    "keywords": [], 
-    "window": {
+  "main": "makers.html",
+  "name": "Snap4FirstMakers",
+  "dependencies": {
+    "firmata": "^0.11.3",
+    "node-twitter-api": "^1.6.2",
+    "q": "^1.4.1",
+    "serialport": "^3.1.1"
+  },
+      "window": {
         "fullscreen": false, 
         "exe_icon": "", 
         "kiosk_emulation": false, 
@@ -26,25 +24,7 @@
         "as_desktop": false, 
         "min_width": 960, 
         "position": "center", 
-        "show_in_taskbar": true, 
-        "mac_icon": "makers/FirstMakersLogo.png", 
-        "transparent": false, 
-        "toolbar": false, 
-        "icon": "makers/FirstMakersLogo.png"
-    }, 
-    "dependencies": {
-  
-    }, 
-    "snapshot": "", 
-    "version": "1.0.2", 
-    "webkit": {
-        "page-cache": false, 
-        "java": false, 
-        "plugin": false
-    }, 
-    "inject-js-start": "", 
-    "node-remote": "", 
-    "main": "makers.html", 
-    "app_name": "Snap4FirstMakers", 
-    "description": "For controlling firstmakers board and arduino"
+        "show_in_taskbar": true 
+    
+    }
 }

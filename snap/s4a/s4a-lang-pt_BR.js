@@ -1,6 +1,20 @@
 s4aTempDict = {
 
-    /*
+    /* ============================================
+
+    s4a-lang-pt_BR.js
+
+    Brazilian Portuguese translation for Snap4Arduino
+
+    translated by Aldo von Wangenheim
+
+    Copyright (C) 2016 by Aldo von Wangenheim
+    http://www.computacaonaescola.ufsc.br/
+
+    ============================================
+
+    This file is part of Snap4Arduino.
+
        Special characters: (see <http://0xcc.net/jsescape/>)
 
        Ä, ä   \u00c4, \u00e4
@@ -46,7 +60,7 @@ s4aTempDict = {
         'entrada digital',
 
     'digital output':
-        'sortida digital',
+        'saída digital',
 
     'PWM':
         'PWM',
@@ -55,90 +69,93 @@ s4aTempDict = {
         'servo',
 
     'clockwise (1500-1000)':
-        'sentit horari (1500-1000)',
+        'no sentido horário (1500-1000)',
 
     'counter-clockwise (1500-2000)':
-        'sentit anti-horari (1500-2000)',
+        'no sentido anti-horário (1500-2000)',
 
-    'stopped':
-        'aturat (1500)',
+    'stopped (1500)':
+        'parado (1500)',
 
     'disconnected':
-        'desconnectat',
+        'desligado',
 
     'angle (0-180)':
-        'angle (0-180)',
+        'com ângulo (0-180)',
 
     'connect to Arduino':
-        'connectar a Arduino',
+        'conectar ao Arduino',
 
     'disconnect Arduino':
-        'desconnectar Arduino',
+        'desconectar do Arduino',
 
     'Connect Arduino':
-        'Connectar Arduino',
+        'Conectar Arduino',
 
     'Disconnect Arduino':
-        'Desconnectar Arduino',
+        'Desconectar Arduino',
 
     'analog reading %analogPin':
-        'lectura analògica %analogPin',
+        'o valor analógico no pino %analogPin',
 
     'digital reading %digitalPin':
-        'lectura digital %digitalPin',
+        'o valor booleano no pino digital %digitalPin é «verdadeiro»',
 
     'connect arduino at %port':
-        'connectar arduino al port %port',
+        'conecte Arduino em %port',
+
+    'connect arduino at %s':
+        'conecte Arduino em %s',
 
     'setup digital pin %digitalPin as %pinMode':
-        'configurar pin %digitalPin com a %pinMode',
+        'configure o pino digital %digitalPin como %pinMode',
 
     'set digital pin %digitalPin to %b':
-        'posar pin digital %digitalPin a %b',
+        'coloque no pino digital %digitalPin o valor booleano %b',
 
     'set servo %servoPin to %servoValue':
-        'posar servo %servoPin a %servoValue',
+        'posicione o servo %servoPin em %servoValue',
 
     'set analog pin %pwmPin to %n':
-        'posar pin analògic %pwmPin a %n',
+        'coloque no pino analógico %pwmPin o valor %n',
 
     'Connecting board at port\n': 
-        'Connectant placa al port\n',
+        'Conectando o Arduino na porta\n',
 
     'An Arduino board has been connected. Happy prototyping!':
-        'S\'ha connectat correctament una placa Arduino.\nFeliç prototipatge!',
+        'Um Arduino foi conectado.\nFeliz prototipagem!',
 
     'Board was disconnected from port\n':
-        'S\'ha desconnectat la placa del port\n',
+        'A placa foi desconectada da porta\n',
 
     'It seems that someone pulled the cable!':
-        'Sembla que algú ha desconnectat el cable!',
+        'Parece que alguém desconectou o cabo!',
 
     'Error connecting the board.':
-        'Error en connectar a la placa',
+        'Erro ao conectar ao Arduino',
 
     'There is already a board connected to this sprite':
-        'Aquest objecte ja té una placa connectada',
+        'Já há um Arduino conectado e este ator',
 
     'Could not connect an Arduino\nNo boards found':
-        'No s\'ha pogut connectar cap Arduino\nNo s\'ha trobat cap placa',
+        'Não consegui conectar a um Arduino\nNão encontrei nenhuma placa',
 
     'Could not talk to Arduino in port\n':
-        'No s\'ha pogut establir comunicació amb Arduino al port\n',
+        'Não consegui comunicar com Arduino na porta\n',
 
     'Check if firmata is loaded.':
-        'Reviseu que Firmata hi estigui carregat.',
+        'Verifique se Firmata foi gravado no Arduino',
 
     'An error was detected on the board\n\n':
-        'S\'ha detectat un error a la placa\n\n',
+        'Foi detectado um erro na placa\n\n',
 
     'Board is not connected':
-        'La placa no està connectada',
+        'O Arduino não está conectado',
 
     'New Arduino translatable project':
-        'Nou projecte traduïble a Arduino' 
+        'Novo projeto tradutível para Arduino' 
 
 };
 
-// Add attributes to original SnapTranslator.dict.ca
-for (var attrname in s4aTempDict) { SnapTranslator.dict.ca[attrname] = s4aTempDict[attrname]; }
+// Add attributes to original SnapTranslator.dict.pt
+for (var attrname in s4aTempDict) { SnapTranslator.dict.pt_BR[attrname] = s4aTempDict[attrname]; }

@@ -159,7 +159,12 @@ SpriteMorph.prototype.initBlocks = function () {
         spec: 'potentiometer'
     };
  
- 
+     SpriteMorph.prototype.blocks.makersBatteryLevel =
+    {
+        type: 'reporter',
+        category: 'makers',
+        spec: 'battery level'
+    };
     SpriteMorph.prototype.blocks.makersSwitch =
     {
         type: 'predicate',
@@ -223,19 +228,33 @@ SpriteMorph.prototype.initBlocks = function () {
         defaults: [null, 'clockwise']
     };
     
+   /* SpriteMorph.prototype.blocks.makersExtServoWriteV2 =
+    {
+        type: 'command',
+        category: 'makers',
+        spec: 'External servo %servoPinV2 to %servoValue',
+        defaults: ['D0', 'clockwise']
+    };*/
+    
     SpriteMorph.prototype.blocks.makersServoWriteV2 =
     {
         type: 'command',
         category: 'makers',
-        spec: 'servo to %servoValue',
-        defaults: ['clockwise']
+        spec: 'servo %servoPinV2 to %servoValue',
+        defaults: ['Primary', 'clockwise']
     };
-    
     SpriteMorph.prototype.blocks.makersMotor =
     {
         type: 'command',
         category: 'makers',
         spec: 'motor spin %motorSpinValue speed %motorSpeedValue',
+        defaults: ['0','50']
+    };
+    SpriteMorph.prototype.blocks.makersExtMotor =
+    {
+        type: 'command',
+        category: 'makers',
+        spec: 'External motor %motorSpinValue speed %motorSpeedValue',
         defaults: ['0','50']
     };
     SpriteMorph.prototype.blocks.outputDigitalOn =
@@ -361,16 +380,7 @@ function overridenBlockTemplates(category) {
             justconnected: false,   // Mark to avoid double attempts
         };
     }
-
-    //var variableWatcherToggle = SpriteMorph.prototype.originalBlockTemplates_Makers.variableWatcherToggle;
-
-    function variableBlock(varName) {
-        var newBlock = SpriteMorph.prototype.variableBlock(varName);
-        newBlock.isDraggable = false;
-        newBlock.isTemplate = true;
-        return newBlock;
-    }
-    
+        
    function watcherToggle(selector) {
         if (StageMorph.prototype.hiddenPrimitives[selector]) {
             return null;
@@ -394,6 +404,13 @@ function overridenBlockTemplates(category) {
         );
        return toggle;
     }
+    
+    function variableBlock(varName) {
+        var newBlock = SpriteMorph.prototype.variableBlock(varName);
+        newBlock.isDraggable = false;
+        newBlock.isTemplate = true;
+        return newBlock;
+    }
 
     function variableWatcherToggle(varName) {
         return new ToggleMorph(
@@ -409,6 +426,48 @@ function overridenBlockTemplates(category) {
             null
         );
     }
+    
+    function arduinoWatcherToggle (selector) {
+        if (StageMorph.prototype.hiddenPrimitives[selector]) {
+            return null;
+        }
+        var info = SpriteMorph.prototype.blocks[selector];
+
+        return new ToggleMorph(
+            'checkbox',
+            this,
+            function () {
+                var reporter = detect(blocks, function (each) {
+                        return (each.selector === selector)
+                    }),
+                    pin = reporter.inputs()[0].contents().text;
+
+                if (!pin) { return };
+
+                myself.arduinoWatcher(
+                    selector,
+                    localize(info.spec),
+                    myself.blockColor[info.category],
+                    pin
+                );
+            },
+            null,
+            function () {
+                var reporter = detect(blocks, function (each) {
+                    return (each && each.selector === selector)
+                });
+
+                return reporter &&
+                    myself.showingArduinoWatcher(selector, reporter.inputs()[0].contents().text);
+            },
+            null
+        );
+    }
+    function blockBySelector (selector) {
+        var newBlock = SpriteMorph.prototype.blockForSelector(selector, true);
+        newBlock.isTemplate = true;
+        return newBlock;
+    };
 
     function helpMenu() {
         var menu = new MenuMorph(this);
@@ -1238,6 +1297,31 @@ function overridenBlockTemplates(category) {
         }
 
     } else if (category === 'makers') {
+        
+        /*var reportTemperature =  blockBySelector('makersTemperature'),
+            toggleTemperature =  arduinoWatcherToggle('makersTemperature'),
+            reportLight = blockBySelector('makersLight'),
+            toggleLight = arduinoWatcherToggle('makersLight'),
+            reportAudio = blockBySelector('makersAudio'),
+            toggleAudio = arduinoWatcherToggle('makersAudio'),
+            reportHumidity = blockBySelector('makersHumidity'),
+            toggleHumidity = arduinoWatcherToggle('makersHumidity'),
+            reportPotentiometer = blockBySelector('makersPotentiometer'),
+            togglePotentiometer = arduinoWatcherToggle('makersPotentiometer'),
+            reportSwitch = blockBySelector('makersSwitch'),
+            toggleSwitch = arduinoWatcherToggle('makersSwitch'),
+            reportInfrared = blockBySelector('makersInfrared'),
+            toggleLInfrared = arduinoWatcherToggle('makersInfrared');
+            
+        reportTemperature.toggle = toggleTemperature;
+        reportAudio.toggle = toggleAudio;
+        reportHumidity.toggle = toggleHumidity;
+        reportLight.toggle = toggleLight;
+        reportInfrared.toggle = toggleLInfrared;
+        reportSwitch.toggle = toggleSwitch;
+        reportPotentiometer.toggle = togglePotentiometer;*/
+        
+            
         blocks.push(arduinoConnectButton);
         blocks.push(arduinoDisconnectButton);
         blocks.push('-');
@@ -1265,6 +1349,8 @@ function overridenBlockTemplates(category) {
         blocks.push(blockBySelector('makersSwitch'));
         blocks.push('-');
         blocks.push(blockBySelector('makersReadSensor'));
+        blocks.push(blockBySelector('soilMoisture'));
+        blocks.push(blockBySelector('temperatureProbe'));
         if(world.isMakersV2){
             //bloques makers para la tarjeta version 2 
             blocks.push(blockBySelector('makersReportDigitalPinV2'));
@@ -1274,7 +1360,10 @@ function overridenBlockTemplates(category) {
             blocks.push('-');
             blocks.push(blockBySelector('makersServoWriteV2'));
             blocks.push(blockBySelector('makersMotor'));
-            
+            blocks.push('-');
+            //blocks.push(blockBySelector('makersExtServoWriteV2'));
+            blocks.push(blockBySelector('makersExtMotor'));
+            blocks.push(blockBySelector('makersBatteryLevel'));
         }else{
             
             blocks.push(blockBySelector('makersReportDigitalPin'));
@@ -1284,8 +1373,7 @@ function overridenBlockTemplates(category) {
             blocks.push('-');
             blocks.push(blockBySelector('makersServoWrite'));
         }
-        blocks.push(blockBySelector('soilMoisture'));
-        blocks.push(blockBySelector('temperatureProbe'));
+
 
     } else if (category === 'internet') {
         blocks.push('-');
