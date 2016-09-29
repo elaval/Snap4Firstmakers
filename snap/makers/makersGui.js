@@ -282,7 +282,7 @@ IDE_Morph.prototype.aboutFirstMakers = function () {
 IDE_Morph.prototype.cloudMenu = function () {
     return;
 };
-IDE_Morph.prototype.createControlBar = function () {
+/*IDE_Morph.prototype.createControlBar = function () {
     // assumes the logo has already been created
     var padding = 5,
         button,
@@ -293,7 +293,7 @@ IDE_Morph.prototype.createControlBar = function () {
         settingsButton,
         stageSizeButton,
         appModeButton,
-        /*cloudButton,*/
+        cloudButton,
         x,
         colors = [
             this.groupColor,
@@ -531,8 +531,8 @@ IDE_Morph.prototype.createControlBar = function () {
         settingsButton.setCenter(myself.controlBar.center());
         settingsButton.setLeft(this.left());
 
-       /* cloudButton.setCenter(myself.controlBar.center());
-        cloudButton.setRight(settingsButton.left() - padding);*/
+       cloudButton.setCenter(myself.controlBar.center());
+        cloudButton.setRight(settingsButton.left() - padding);
 
         projectButton.setCenter(myself.controlBar.center());
         projectButton.setRight(settingsButton.left() - padding);
@@ -567,7 +567,7 @@ IDE_Morph.prototype.createControlBar = function () {
         this.label.setCenter(this.center());
         this.label.setLeft(this.settingsButton.right() + padding);
     };
-};
+}*/
 IDE_Morph.prototype.toggleAppMode = function (appMode) {
     var world = this.world(),
         elements = [

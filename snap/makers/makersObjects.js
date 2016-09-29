@@ -1476,3 +1476,25 @@ StageMorph.prototype.userMenu = function () {
     return menu;
 };
 
+StageMorph.prototype.stepGenericConditions = function (stopAll) {
+    var hats = [],
+        myself = this,
+        ide;
+    this.children.concat(this).forEach(function (morph) {
+        if (morph instanceof SpriteMorph || morph instanceof StageMorph) {
+            hats = hats.concat(morph.allGenericHatBlocks());
+        }
+    });
+    if (!hats.length) {
+        this.enableCustomHatBlocks = false;
+        ide = this.parentThatIsA(IDE_Morph);
+        if (ide) {
+            ide.controlBar.stopButton.refresh();
+        }
+        return;
+    }
+    hats.forEach(function (block) {
+        myself.threads.doWhen(block, stopAll);
+    });
+};
+

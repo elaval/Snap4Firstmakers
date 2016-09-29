@@ -82,7 +82,7 @@ Process.prototype.makersBuzzerOn = function() {
 
 	if (sprite.makersIsBoardConnected()) {
 		this.setPinMode(6,['PWM']);
-		this.pwmWrite(6,60);//Peticion bajar la intensidad del buzzer
+		this.pwmWrite(6,70);//Peticion bajar la intensidad del buzzer
 	} else {
 		throw new Error(localize("Arduino not connected"));
 	}
@@ -194,7 +194,6 @@ Process.prototype.makersPotentiometer = function () {
 	} else {
 		throw new Error(localize("Arduino not connected"));
 	}
-
 };
 
 
@@ -207,9 +206,9 @@ Process.prototype.makersSwitch = function() {
     var sprite = this.homeContext.receiver;
 
 	if (sprite.makersIsBoardConnected()) {
-        var val;
-        this.setPinMode(2,['digital input']);
-		val = this.reportDigitalReading(2);
+        //var val;
+        //this.setPinMode(2,['digital input']);
+		var val = this.reportDigitalReading(2);
 		return val;
 	} else {
 		throw new Error(localize("Arduino not connected"));

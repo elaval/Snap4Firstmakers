@@ -24,7 +24,7 @@
         "as_desktop": false, 
         "min_width": 960, 
         "position": "center", 
-        "show_in_taskbar": true 
-    
+        "show_in_taskbar": true, 
+        "icon": "images/icon.png"
     }
 }

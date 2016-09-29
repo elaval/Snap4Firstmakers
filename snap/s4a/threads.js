@@ -132,8 +132,8 @@ Process.prototype.reportDigitalReading = function (pin) {
 
         if (board.pins[pin].mode != board.MODES.INPUT) {
             board.pinMode(pin, board.MODES.INPUT);
-            board.digitalRead(pin, function(value) { board.pins[pin].value = value });
         }
+        board.digitalRead(pin, function(value) { board.pins[pin].value = value });
         return board.pins[pin].value == 1;
     } else {
         throw new Error(localize('Arduino not connected'));		

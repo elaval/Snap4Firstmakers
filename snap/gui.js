@@ -536,7 +536,7 @@ IDE_Morph.prototype.createControlBar = function () {
         settingsButton,
         stageSizeButton,
         appModeButton,
-        cloudButton,
+        /*cloudButton,*/
         x,
         colors = [
             this.groupColor,
@@ -760,7 +760,7 @@ IDE_Morph.prototype.createControlBar = function () {
     this.controlBar.settingsButton = settingsButton; // for menu positioning
 
     // cloudButton
-    button = new PushButtonMorph(
+    /*button = new PushButtonMorph(
         this,
         'cloudMenu',
         new SymbolMorph('cloud', 11)
@@ -780,7 +780,7 @@ IDE_Morph.prototype.createControlBar = function () {
     button.fixLayout();
     cloudButton = button;
     this.controlBar.add(cloudButton);
-    this.controlBar.cloudButton = cloudButton; // for menu positioning
+    this.controlBar.cloudButton = cloudButton; // for menu positioning*/
 
     this.controlBar.fixLayout = function () {
         x = this.right() - padding;
@@ -810,11 +810,11 @@ IDE_Morph.prototype.createControlBar = function () {
         settingsButton.setCenter(myself.controlBar.center());
         settingsButton.setLeft(this.left());
 
-        cloudButton.setCenter(myself.controlBar.center());
-        cloudButton.setRight(settingsButton.left() - padding);
+        //cloudButton.setCenter(myself.controlBar.center());
+        //cloudButton.setRight(settingsButton.left() - padding);
 
         projectButton.setCenter(myself.controlBar.center());
-        projectButton.setRight(cloudButton.left() - padding);
+        projectButton.setRight(settingsButton.left() - padding);
 
         this.updateLabel();
     };

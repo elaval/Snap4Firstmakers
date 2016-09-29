@@ -249,6 +249,7 @@ Arduino.prototype.connectNetwork = function (host) {
 };
 
 Arduino.prototype.connect = function (port) {
+   
     var myself = this;
 
     this.disconnect(true);
@@ -816,6 +817,8 @@ MakerApp.convertAnalogMeasure = {
 
 
 }
+
+
 
 //global bluetooth
 /*var Bluetooth = new (require('bluetooth-serial-port')).BluetoothSerialPort();
